@@ -502,15 +502,29 @@ public class CustomerController : MonoBehaviour, IInteractable
             return;
         }
 
-        // Use the new pizza validator for cleaner code
-        if (PizzaValidator.ValidatePizza(pizza, wantedIngredients))
+        // Check if pizza has all required ingredients
+        bool hasAll = true;
+        foreach (System.Type ingType in wantedIngredients)
         {
+            if (ingType == typeof(Sauce) && !pizza.HasSauce) hasAll = false;
+            if (ingType == typeof(Cheese) && !pizza.HasCheese) hasAll = false;
+            if (ingType == typeof(Bacon) && !pizza.HasBacon) hasAll = false;
+            if (ingType == typeof(Pineapple) && !pizza.HasPineapple) hasAll = false;
+            if (ingType == typeof(Pepperoni) && !pizza.HasPepperoni) hasAll = false;
+        }
+
+        // Also check that pizza doesn't have any unwanted ingredients
+        if (hasAll)
+        {
+            if (!wantedIngredients.Contains(typeof(Bacon)) && pizza.HasBacon) hasAll = false;
+            if (!wantedIngredients.Contains(typeof(Pineapple)) && pizza.HasPineapple) hasAll = false;
+            if (!wantedIngredients.Contains(typeof(Pepperoni)) && pizza.HasPepperoni) hasAll = false;
+        }
+
+        if (hasAll)
             orderIsCorrect();
-        }
         else
-        {
             OrderIsIncorrect();
-        }
     }
 
     //***************************************************************************//

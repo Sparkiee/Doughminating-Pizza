@@ -323,15 +323,12 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         ctrl.mySeat = seatIndex;
         Debug.Log($"Assigned seat {seatIndex} to customer {ctrl.gameObject.name}");
 
-        // Set destination so feet touch floor with small random offset
+        // Set destination so feet touch floor with no random offset
         Vector3 destination = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].position : Vector3.zero;
         destination.y = 1f; // Elevate destination so feet touch floor
 
-        // Add random offset so customers don't sit in same spot
-        float randomOffsetX = Random.Range(-0.8f, 0.8f);  // Small offset to avoid exact overlap
-        float randomOffsetZ = Random.Range(-0.8f, 0.8f);  // Small offset to avoid exact overlap
-        destination.x += randomOffsetX;
-        destination.z += randomOffsetZ;
+        // Add a forward offset so the customer stands slightly in front of the seat
+        destination -= seatTransforms[seatIndex].forward * -1f; // Adjust the distance if needed
 
         ctrl.destination = destination;
 
@@ -343,6 +340,6 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         availableSeatForCustomers[seatIndex] = false;
 
         string seatName = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].name : $"Seat_{seatIndex}";
-        Debug.Log($"Spawned customer at seat {seatIndex} ({seatName}) with offset ({randomOffsetX:F2}, {randomOffsetZ:F2})");
+        Debug.Log($"Spawned customer at seat {seatIndex} ({seatName})");
     }
 }
