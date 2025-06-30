@@ -101,11 +101,6 @@ public class Pizza : Ingredient
         }
     }
 
-    /// <summary>
-    /// Attempts to add an ingredient to the pizza
-    /// </summary>
-    /// <param name="ingredient">The ingredient to add</param>
-    /// <returns>True if the ingredient was added, false otherwise</returns>
     private bool TryAddIngredient(Ingredient ingredient)
     {
         switch (ingredient)

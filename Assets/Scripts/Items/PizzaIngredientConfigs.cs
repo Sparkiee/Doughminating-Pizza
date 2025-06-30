@@ -1,14 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Helper class to manage pizza ingredient visual configurations
-/// </summary>
 public static class PizzaIngredientConfigs
 {
-    /// <summary>
-    /// Creates visual configuration for different ingredient types
-    /// </summary>
     public static IngredientVisualConfig GetConfigForIngredient(IngredientType type, 
         GameObject saucePrefab, GameObject cheesePrefab, GameObject baconPrefab, 
         GameObject pineapplePrefab, GameObject pepperoniPrefab)

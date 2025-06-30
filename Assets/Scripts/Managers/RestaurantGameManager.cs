@@ -66,9 +66,6 @@ public class RestaurantGameManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Start the restaurant game
-    /// </summary>
     public void StartGame()
     {
         if (gameStarted) return;
@@ -83,9 +80,6 @@ public class RestaurantGameManager : MonoBehaviour
         Debug.Log("Restaurant Game Started! Day 0, Level 1");
     }
     
-    /// <summary>
-    /// Advance to the next day
-    /// </summary>
     private void AdvanceDay()
     {
         currentDay++;
@@ -110,9 +104,6 @@ public class RestaurantGameManager : MonoBehaviour
         Debug.Log($"Day {currentDay} started (Level {currentLevel})");
     }
     
-    /// <summary>
-    /// Update the day display in UI
-    /// </summary>
     private void UpdateDayDisplay()
     {
         if (dayText != null)
@@ -121,9 +112,6 @@ public class RestaurantGameManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Auto-find the day text component in the scene
-    /// </summary>
     private void FindDayText()
     {
         // Look for GameObject named "Day" with a child "Text (TMP)"
@@ -148,32 +136,17 @@ public class RestaurantGameManager : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Get current day (0-based)
-    /// </summary>
     public static int GetCurrentDay() => currentDay;
     
-    /// <summary>
-    /// Get current difficulty level (1-based)
-    /// </summary>
     public static int GetCurrentLevel() => currentLevel;
     
-    /// <summary>
-    /// Get progress through current day (0.0 to 1.0)
-    /// </summary>
     public float GetDayProgress()
     {
         return gameStarted ? (dayTimer / dayDuration) : 0f;
     }
     
-    /// <summary>
-    /// Check if game has started
-    /// </summary>
     public static bool IsGameStarted() => Instance != null && Instance.gameStarted;
     
-    /// <summary>
-    /// Reset the game state (for debugging or restart)
-    /// </summary>
     public void ResetGame()
     {
         gameStarted = false;
@@ -184,17 +157,11 @@ public class RestaurantGameManager : MonoBehaviour
         Debug.Log("Restaurant Game Reset");
     }
     
-    /// <summary>
-    /// Get difficulty multiplier based on current level
-    /// </summary>
     public static float GetDifficultyMultiplier()
     {
         return 1f + (currentLevel - 1) * 0.2f; // Each level increases difficulty by 20%
     }
     
-    /// <summary>
-    /// Get level name/description
-    /// </summary>
     public static string GetLevelName()
     {
         return currentLevel switch

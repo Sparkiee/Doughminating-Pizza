@@ -57,11 +57,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
         SpawnIngredientAtPoint(point, pickable);
     }
 
-    /// <summary>
-    /// Spawns an ingredient at the specified point with proper positioning and rotation
-    /// </summary>
-    /// <param name="spawnPoint">The transform where the ingredient should be spawned</param>
-    /// <param name="pickable">The IPickable component of the prefab</param>
     private void SpawnIngredientAtPoint(Transform spawnPoint, IPickable pickable)
     {
         Vector3 spawnRotation = spawnPoint.rotation.eulerAngles;
