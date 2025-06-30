@@ -81,10 +81,25 @@ public class Health : MonoBehaviour
         updateHealth();
     }
 
-    public void addMaxHealth(int amount)
+    public void AddMaxHealth(int amount)
     {
         maxHealth += amount;
         health += amount; // Increase current health as well
+        updateHealth();
+    }
+
+    public void Heal(int amount)
+    {
+        if (isGodMode)
+        {
+            Debug.Log("God mode is active, no healing applied.");
+            return; // Skip healing if in god mode
+        }
+        health += amount;
+        if (health > maxHealth)
+        {
+            health = maxHealth; // Ensure health doesn't exceed maxHealth
+        }
         updateHealth();
     }
 
