@@ -16696,6 +16696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db721384121bbe4ba5a2fd7e9a77a20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customerAnimatorController: {fileID: 9100000, guid: f6380c9cdfbe37b48baffa7f1e9c76fb,
+    type: 2}
   availableAppearances:
   - name: Cop
     modelPrefab: {fileID: 6644603938449114179, guid: aba2c8eebf9419e47a7fbe2adc3ef311,

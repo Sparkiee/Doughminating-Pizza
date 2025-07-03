@@ -11,6 +11,8 @@ public class CustomerAppearanceData
 
 public class CustomerAppearanceManager : MonoBehaviour
 {
+    [SerializeField] private RuntimeAnimatorController customerAnimatorController;
+
     [Header("Customer Models")]
     [Tooltip("Drag all customer prefabs from the Assets/Perfabs/Customers/ folder here")]
     [SerializeField] private CustomerAppearanceData[] availableAppearances = new CustomerAppearanceData[]
@@ -138,6 +140,14 @@ public class CustomerAppearanceManager : MonoBehaviour
             newModel.transform.localPosition = Vector3.zero;
             newModel.transform.localRotation = Quaternion.identity;
             
+
+            newModel.AddComponent<Animator>();
+            if (customerAnimatorController != null)
+            {
+                Animator newAnimator = newModel.GetComponent<Animator>();
+                newAnimator.runtimeAnimatorController = customerAnimatorController;
+            }
+
             // Remove components not needed for visuals (if any)
             RemoveUnnecessaryComponents(newModel);
             

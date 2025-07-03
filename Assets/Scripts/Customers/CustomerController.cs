@@ -38,6 +38,8 @@ public class CustomerController : MonoBehaviour, IInteractable
     public AudioClip orderIsNotOkSfx;
     public AudioClip receivedSomethingGoodSfx;
 
+    private Animator animator; // Animator for customer animations
+
     // Customer Moods
     /* Currently we have 4 moods: 
      [0] Default
@@ -349,6 +351,7 @@ public class CustomerController : MonoBehaviour, IInteractable
                 GameObject appliedModel = CustomerAppearanceManager.Instance.ApplyAppearanceToCustomer(gameObject, appearance);
                 if (appliedModel != null)
                 {
+                    animator = appliedModel.GetComponent<Animator>();
                     Debug.Log($"Customer {customerName} got appearance: {appearance.name}");
                 }
                 else
@@ -550,15 +553,15 @@ public class CustomerController : MonoBehaviour, IInteractable
         
         // // Play success animation
         // Animator animator = GetComponent<Animator>();
-        // if (animator != null)
-        // {
-        //     animator.SetTrigger("OrderSuccess");
-        //     Debug.Log($"{customerName} successfully received their order!");
-        // }
-        // else
-        // {
-        //     Debug.LogWarning($"Animator not found for {customerName}, playing SFX only.");
-        // }
+        if (animator != null)
+        {
+            animator.SetTrigger("Celebrate");
+            Debug.Log($"{customerName} successfully received their order!");
+        }
+        else
+        {
+            Debug.LogWarning($"Animator not found for {customerName}, playing SFX only.");
+        }
 
 
         playSfx(orderIsOkSfx);

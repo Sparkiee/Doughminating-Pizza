@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 3661271284506916789}
   - component: {fileID: 3237481180500922799}
   - component: {fileID: 7596929951724832759}
-  - component: {fileID: 2587186437353181730}
+  - component: {fileID: 8921635287900539166}
   m_Layer: 0
   m_Name: Customer
   m_TagString: Customer
@@ -337,27 +337,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 1615279015708764166, guid: d9dc4955399bf2f49bb7b31c3ca7efe4,
     type: 3}
---- !u!95 &2587186437353181730
-Animator:
-  serializedVersion: 5
+--- !u!111 &8921635287900539166
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146997833569894892}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e361b8c3ebdea3a41b96a4a25b3f6f9f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: bb7505fddaf931c42802705aa523fc83, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2717182938467939759
 GameObject:
   m_ObjectHideFlags: 0
