@@ -13,7 +13,7 @@ public class RestaurantGameManager : MonoBehaviour
     [SerializeField] private int maxLevel = 5;      // Maximum difficulty level
     
     // Game state
-    private static int currentDay = 0;
+    private static int currentDay = 1;
     private static int currentLevel = 1;
     private float dayTimer = 0f;
     private bool gameStarted = false;
@@ -71,7 +71,7 @@ public class RestaurantGameManager : MonoBehaviour
         if (gameStarted) return;
         
         gameStarted = true;
-        currentDay = 0;  // Start from day 0
+        currentDay = 1;  // Start from day 1
         currentLevel = 1;
         dayTimer = 0f;
         
@@ -150,7 +150,7 @@ public class RestaurantGameManager : MonoBehaviour
     public void ResetGame()
     {
         gameStarted = false;
-        currentDay = 0;
+        currentDay = 1;
         currentLevel = 1;
         dayTimer = 0f;
         UpdateDayDisplay();

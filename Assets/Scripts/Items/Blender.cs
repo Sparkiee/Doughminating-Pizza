@@ -5,7 +5,18 @@ using UnityEngine;
 public class Blender : Tool
 {
     private bool isBlending = false;
+    private Animator animator;
     [SerializeField] private Transform spawnPoint;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogError("Blender: Animator component not found!");
+        }
+    }
+
     public override void Interact()
     {
         if(isBlending) return; // Prevent multiple interactions at once
@@ -17,6 +28,10 @@ public class Blender : Tool
             if (ingredient != null && ingredient is Tomato)
             {
                 isBlending = true; // Set the flag to true
+                if (animator != null)
+                {
+                    animator.SetTrigger("Blend"); // Trigger the blending animation
+                }
                 StartCoroutine(Blend(playerHand, ingredient));
             }
             else
@@ -45,6 +60,10 @@ public class Blender : Tool
         if (factory != null)
         {
             factory.Interact(spawnPoint); // Triggers the sauce spawn!
+        }
+        if(animator != null)
+        {
+            animator.SetTrigger("StopBlend"); // Trigger the blend complete animation
         }
         isBlending = false; // Reset the flag after blending is done
     }

@@ -521,7 +521,7 @@ public class CustomerController : MonoBehaviour, IInteractable
             if (!wantedIngredients.Contains(typeof(Pepperoni)) && pizza.HasPepperoni) hasAll = false;
         }
 
-        if (hasAll)
+        if (hasAll && pizza.GetCookLevel() == CookState.Cooked)
             orderIsCorrect();
         else
             OrderIsIncorrect();
@@ -548,6 +548,19 @@ public class CustomerController : MonoBehaviour, IInteractable
         // Increment completed orders counter
         CustomerManager.AddCompletedOrder();
         
+        // // Play success animation
+        // Animator animator = GetComponent<Animator>();
+        // if (animator != null)
+        // {
+        //     animator.SetTrigger("OrderSuccess");
+        //     Debug.Log($"{customerName} successfully received their order!");
+        // }
+        // else
+        // {
+        //     Debug.LogWarning($"Animator not found for {customerName}, playing SFX only.");
+        // }
+
+
         playSfx(orderIsOkSfx);
         InstantiateMoney();
         StartCoroutine(leave());
@@ -777,17 +790,17 @@ public class CustomerController : MonoBehaviour, IInteractable
             if (pizza != null)
             {
                 // Check if pizza is cooked
-                if (pizza.GetCookLevel() == CookState.Raw)
-                {
-                    playerHand.InvalidAction("This pizza is not cooked yet!", 2f);
-                    return;
-                }
-                else if (pizza.GetCookLevel() == CookState.Burnt)
-                {
-                    playerHand.InvalidAction("This pizza is burnt! I don't want it!", 2f);
-                    OrderIsIncorrect();
-                    return;
-                }
+                // if (pizza.GetCookLevel() == CookState.Raw)
+                // {
+                //     playerHand.InvalidAction("This pizza is not cooked yet!", 2f);
+                //     return;
+                // }
+                // else if (pizza.GetCookLevel() == CookState.Burnt)
+                // {
+                //     playerHand.InvalidAction("This pizza is burnt! I don't want it!", 2f);
+                //     OrderIsIncorrect();
+                //     return;
+                // }
 
                 // Pizza is cooked, now check ingredients
                 TryGivePizza(heldItem);
@@ -795,12 +808,14 @@ public class CustomerController : MonoBehaviour, IInteractable
             }
             else
             {
-                playerHand.InvalidAction("I only want a pizza!", 2f);
+                // playerHand.InvalidAction("I only want a pizza!", 2f);
+                playerHand.InvalidAction("Can only hand pizza");
             }
         }
         else
         {
-            playerHand.ShowToast("You need to bring me a pizza!", 2f);
+            // playerHand.ShowToast("You need to bring me a pizza!", 2f);
+            playerHand.InvalidAction("Can only hand pizza");
         }
     }
 
@@ -819,17 +834,19 @@ public class CustomerController : MonoBehaviour, IInteractable
             Pizza pizza = playerHand.HeldItem.GetComponent<Pizza>();
             if (pizza != null)
             {
-                return $"Give pizza to {firstName}\nWants: {GetWantedIngredientsString()}";
+                // return $"Give pizza to {firstName}\nWants: {GetWantedIngredientsString()}";
+                return "Hand Pizza to " + firstName;
             }
             else
             {
-                return $"{firstName} only wants a pizza\nWants: {GetWantedIngredientsString()}";
+                // return $"{firstName} only wants a pizza\nWants: {GetWantedIngredientsString()}";
             }
         }
         else
         {
-            return $"{firstName} wants: {GetWantedIngredientsString()}";
+            // return $"{firstName} wants: {GetWantedIngredientsString()}";
         }
+        return "";
     }
 
     //***************************************************************************//
