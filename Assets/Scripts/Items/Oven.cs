@@ -130,7 +130,8 @@ public class Oven : MonoBehaviour, IInteractable
         {
             CookState.Raw => 0f,
             CookState.Cooked => cookDuration,
-            CookState.Burnt => burnDuration
+            CookState.Burnt => burnDuration,
+            _ => 0f // Default case
         };
 
         if (ovenTimerText != null)
