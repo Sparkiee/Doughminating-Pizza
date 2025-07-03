@@ -39,10 +39,6 @@ public class Oven : MonoBehaviour, IInteractable
         }
         if (smokeEffect)
             ovenTimerAudioSource = GetComponent<AudioSource>();
-        if (ovenTimerAudioSource != null)
-        {
-            Debug.Log($"Oven sound loaded: {ovenTimerAudioSource.clip.name}");
-        }
     }
     public void Interact()
     {
@@ -86,6 +82,7 @@ public class Oven : MonoBehaviour, IInteractable
             {
                 ovenTimerText.color = Color.red;
                 ovenTimerText.text = "00:00";
+                ovenTimerText.enabled = true;
             }
             if (smokeEffect)
                 smokeEffect.gameObject.SetActive(false);
