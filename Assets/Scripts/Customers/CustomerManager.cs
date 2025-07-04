@@ -345,4 +345,40 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         string seatName = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].name : $"Seat_{seatIndex}";
         Debug.Log($"Spawned customer at seat {seatIndex} ({seatName}) with offset ({randomOffsetX:F2}, {randomOffsetZ:F2})");
     }
+    
+    /// <summary>
+    /// Reset game state for restart
+    /// </summary>
+    public static void ResetGame()
+    {
+        // Reset static variables
+        completedOrders = 0;
+        
+        if (Instance != null)
+        {
+            // Reset instance variables
+            Instance.currentCustomerLimit = Instance.maxCustomersEarly;
+            
+            // Clear all seats (mark as available)
+            if (Instance.availableSeatForCustomers != null)
+            {
+                for (int i = 0; i < Instance.availableSeatForCustomers.Length; i++)
+                {
+                    Instance.availableSeatForCustomers[i] = true;
+                }
+            }
+            
+            // Destroy all existing customers
+            CustomerController[] existingCustomers = FindObjectsOfType<CustomerController>();
+            for (int i = 0; i < existingCustomers.Length; i++)
+            {
+                if (existingCustomers[i] != null)
+                {
+                    Destroy(existingCustomers[i].gameObject);
+                }
+            }
+            
+            Debug.Log("CustomerManager game state reset!");
+        }
+    }
 }

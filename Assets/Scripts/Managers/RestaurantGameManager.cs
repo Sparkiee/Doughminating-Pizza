@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class RestaurantGameManager : MonoBehaviour
 {
@@ -13,9 +14,9 @@ public class RestaurantGameManager : MonoBehaviour
     [SerializeField] private int maxLevel = 5;      // Maximum difficulty level
     
     // Game state
-    private static int currentDay = 0;
+    private static int currentDay = 1;
     private static int currentLevel = 1;
-    private float dayTimer = 0f;
+    private float dayTimer = 1f;
     private bool gameStarted = false;
     
     // Singleton pattern
@@ -27,11 +28,22 @@ public class RestaurantGameManager : MonoBehaviour
     
     void Awake()
     {
+        // Check if we're in the main menu scene - if so, don't create the manager
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentScene == "Menu")
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         // Singleton setup
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            // Subscribe to scene change events
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -48,6 +60,14 @@ public class RestaurantGameManager : MonoBehaviour
     
     void Start()
     {
+        // Double-check we're not in the menu scene
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentScene == "Menu")
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         StartGame();
     }
     
@@ -74,13 +94,13 @@ public class RestaurantGameManager : MonoBehaviour
         if (gameStarted) return;
         
         gameStarted = true;
-        currentDay = 0;  // Start from day 0
+        currentDay = 1;  // Start from day 1
         currentLevel = 1;
         dayTimer = 0f;
         
         UpdateDayDisplay();
         
-        Debug.Log("Restaurant Game Started! Day 0, Level 1");
+        Debug.Log("Restaurant Game Started! Day 1, Level 1");
     }
     
     /// <summary>
@@ -149,7 +169,7 @@ public class RestaurantGameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Get current day (0-based)
+    /// Get current day (1-based)
     /// </summary>
     public static int GetCurrentDay() => currentDay;
     
@@ -177,11 +197,17 @@ public class RestaurantGameManager : MonoBehaviour
     public void ResetGame()
     {
         gameStarted = false;
-        currentDay = 0;
+        currentDay = 1;
         currentLevel = 1;
         dayTimer = 0f;
+        
+        // Update UI immediately
         UpdateDayDisplay();
-        Debug.Log("Restaurant Game Reset");
+        
+        // Restart the game
+        StartGame();
+        
+        Debug.Log("Restaurant Game Reset and Restarted!");
     }
     
     /// <summary>
@@ -208,8 +234,21 @@ public class RestaurantGameManager : MonoBehaviour
         };
     }
     
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // If we've loaded the menu scene, destroy this manager
+        if (scene.name == "Menu")
+        {
+            Debug.Log("Menu scene loaded, destroying RestaurantGameManager");
+            Destroy(gameObject);
+        }
+    }
+    
     void OnDestroy()
     {
+        // Unsubscribe from events
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        
         if (Instance == this)
         {
             Instance = null;

@@ -226,8 +226,12 @@ public class SC_Player : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         
-        // Load main menu scene (you can change this to your main menu scene name)
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0); // Assuming main menu is scene 0
+        // Reset cursor for menu
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
+        // Load main menu scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 
     public void PlayClickEffect(RectTransform buttonTransform)

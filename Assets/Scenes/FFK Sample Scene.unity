@@ -4813,11 +4813,11 @@ MonoBehaviour:
     type: 3}
   spawnXOffset: -30
   spawnInterval: 5
-  maxCustomersEarly: 1
-  maxCustomersMid: 2
+  maxCustomersEarly: 2
+  maxCustomersMid: 3
   maxCustomersLate: 3
-  ordersForMidTier: 1
-  ordersForLateTier: 1
+  ordersForMidTier: 2
+  ordersForLateTier: 3
   availableSeatForCustomers: 
 --- !u!4 &184489739
 Transform:
@@ -12495,7 +12495,7 @@ MonoBehaviour:
   healthy: {fileID: 3959336421423576803, guid: c74c3852fbb439d448c2b023b0164e62, type: 3}
   ruined: {fileID: 5356804802077677655, guid: c29b85dce2e303342918c836fe64c551, type: 3}
   isGodMode: 0
-  godModeToggle: {fileID: 1852170829}
+  godModeToggle: {fileID: 0}
 --- !u!1001 &546328125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26920,6 +26920,7 @@ GameObject:
   - component: {fileID: 1132369811}
   - component: {fileID: 1132369813}
   - component: {fileID: 1132369812}
+  - component: {fileID: 1132369814}
   m_Layer: 5
   m_Name: Game Over
   m_TagString: Untagged
@@ -26984,6 +26985,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132369810}
   m_CullTransparentMesh: 1
+--- !u!114 &1132369814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132369810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489a5c688c026964e879c7a94f097334, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tryAgainButton: {fileID: 0}
+  quitButton: {fileID: 906690658}
+  playerController: {fileID: 0}
 --- !u!1001 &1134217453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27828,6 +27844,7 @@ GameObject:
   - component: {fileID: 1175279687}
   - component: {fileID: 1175279689}
   - component: {fileID: 1175279688}
+  - component: {fileID: 1175279690}
   m_Layer: 5
   m_Name: Try Again
   m_TagString: Untagged
@@ -27893,6 +27910,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175279686}
   m_CullTransparentMesh: 1
+--- !u!114 &1175279690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175279686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1175279688}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1132369814}
+        m_TargetAssemblyTypeName: GameOverUI, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1175728355 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8522075622236389654, guid: dd6658866c1c65a4aa4a6c6e8e34e4f5,
@@ -28109,7 +28182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32b1906eef722184d897805f985ccf15, type: 2}
   m_sharedMaterial: {fileID: 7805759917053555725, guid: 32b1906eef722184d897805f985ccf15,
