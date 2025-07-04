@@ -55,17 +55,6 @@ public class Blender : Tool
             yield return new WaitForSeconds(audio.clip.length);
         } else yield return null;
 
-        // Spawn the blended item (e.g., Tomato Sauce)
-        IngredientFactory factory = GetComponent<IngredientFactory>();
-        if (factory != null)
-        {
-            factory.Interact(spawnPoint); // Triggers the sauce spawn!
-        }
-        if(animator != null)
-        {
-            animator.SetTrigger("StopBlend"); // Trigger the blend complete animation
-        }
-        isBlending = false; // Reset the flag after blending is done
     }
 
     public override string getInteractionText()
@@ -82,5 +71,20 @@ public class Blender : Tool
         }
 
         return "";
+    }
+
+    public void OnBlend() {
+        IngredientFactory factory = GetComponent<IngredientFactory>();
+        if (factory != null)
+        {
+            factory.Interact(spawnPoint); // Trigger the sauce spawn!
+        }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("StopBlend");
+        }
+
+        isBlending = false;
     }
 }
