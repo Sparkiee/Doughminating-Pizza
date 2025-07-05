@@ -12,12 +12,35 @@ public class MenuController : MonoBehaviour
 
     private RaycastHit hitInfo;
     private Ray ray;
+    private Camera menuCamera;
     
     // public GameObject playerRecord; Personal best
     
     void Awake()
     {
-        // TODO: Add player's personal record (Need prefab)
+        // Find the camera in the scene
+        menuCamera = Camera.main;
+        if (menuCamera == null)
+        {
+            menuCamera = FindObjectOfType<Camera>();
+        }
+        
+        // Reset any lingering game state
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
+        // Destroy any lingering RestaurantGameManager instances
+        RestaurantGameManager[] managers = FindObjectsOfType<RestaurantGameManager>();
+        for (int i = 0; i < managers.Length; i++)
+        {
+            if (managers[i] != null)
+            {
+                Destroy(managers[i].gameObject);
+            }
+        }
+        
+        Debug.Log("MenuController initialized");
     }
     
     void Update()
@@ -30,73 +53,89 @@ public class MenuController : MonoBehaviour
 
     IEnumerator tapManager()
     {
-        // Mouse 
-        if (Mouse.current.leftButton.isPressed)
-        {
-            ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        }
-        else
+        // Check for mouse input using new Input System
+        if (Mouse.current == null || !Mouse.current.leftButton.isPressed)
         {
             yield break;
         }
+        
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        // Make sure we have a camera
+        if (menuCamera == null)
+        {
+            Debug.LogWarning("No camera found for menu raycast!");
+            yield break;
+        }
+
+        ray = menuCamera.ScreenPointToRay(mousePosition);
 
         if (Physics.Raycast(ray, out hitInfo))
         {
             GameObject objectHit = hitInfo.transform.gameObject;
+            Debug.Log($"Hit object: {objectHit.name}");
+            
             switch (objectHit.name)
             {
                 case "ButtonPlay-01":
+                    Debug.Log("Play button clicked!");
                     playAudio(tapAudio);
                     StartCoroutine(animateButton(objectHit));
                     // PlayerRecord() 
                     yield return new WaitForSeconds(1.0f);
-                    SceneManager.LoadScene("FFK Sample Scene");
+                    LoadGameScene();
                     break;
             }
         }
-        
-        IEnumerator animateButton(GameObject _btn)
-        {
-            tap = false;
-            Vector3 startingScale = _btn.transform.localScale;  
-            Vector3 destinationScale = startingScale * 0.85f;                           
+    }
+    
+    private void LoadGameScene()
+    {
+        Debug.Log("Loading game scene...");
+        SceneManager.LoadScene("FFK Sample Scene");
+    }
 
-            //Scale up
-            float t = 0.0f;
-            while (t <= 1.0f)
+    IEnumerator animateButton(GameObject _btn)
+    {
+        tap = false;
+        Vector3 startingScale = _btn.transform.localScale;  
+        Vector3 destinationScale = startingScale * 0.85f;                           
+
+        //Scale up
+        float t = 0.0f;
+        while (t <= 1.0f)
+        {
+            t += Time.deltaTime * buttonAnimSpeed;
+            _btn.transform.localScale = new Vector3(Mathf.SmoothStep(startingScale.x, destinationScale.x, t),
+                Mathf.SmoothStep(startingScale.y, destinationScale.y, t),
+                _btn.transform.localScale.z);
+            yield return 0;
+        }
+        
+        float r = 0.0f;
+        if (_btn.transform.localScale.x >= destinationScale.x)
+        {
+            while (r <= 1.0f)
             {
-                t += Time.deltaTime * buttonAnimSpeed;
-                _btn.transform.localScale = new Vector3(Mathf.SmoothStep(startingScale.x, destinationScale.x, t),
-                    Mathf.SmoothStep(startingScale.y, destinationScale.y, t),
+                r += Time.deltaTime * buttonAnimSpeed;
+                _btn.transform.localScale = new Vector3(Mathf.SmoothStep(destinationScale.x, startingScale.x, r),
+                    Mathf.SmoothStep(destinationScale.y, startingScale.y, r),
                     _btn.transform.localScale.z);
                 yield return 0;
             }
-            
-            float r = 0.0f;
-            if (_btn.transform.localScale.x >= destinationScale.x)
-            {
-                while (r <= 1.0f)
-                {
-                    r += Time.deltaTime * buttonAnimSpeed;
-                    _btn.transform.localScale = new Vector3(Mathf.SmoothStep(destinationScale.x, startingScale.x, r),
-                        Mathf.SmoothStep(destinationScale.y, startingScale.y, r),
-                        _btn.transform.localScale.z);
-                    yield return 0;
-                }
-            }
-
-            if (r >= 1)
-                tap = true;
         }
 
-        void playAudio(AudioClip _clip)
-        {
-            GetComponent<AudioSource>().clip = _clip;
+        if (r >= 1)
+            tap = true;
+    }
 
-            if (!GetComponent<AudioSource>().isPlaying)
-            {
-                GetComponent<AudioSource>().Play();
-            }
+    void playAudio(AudioClip _clip)
+    {
+        GetComponent<AudioSource>().clip = _clip;
+
+        if (!GetComponent<AudioSource>().isPlaying)
+        {
+            GetComponent<AudioSource>().Play();
         }
     }
 }
