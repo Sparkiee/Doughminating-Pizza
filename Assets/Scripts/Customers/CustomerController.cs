@@ -54,6 +54,8 @@ public class CustomerController : MonoBehaviour, IInteractable
     // UI Elements
     public GameObject patienceBarFG;
     public GameObject patienceBarBG;
+
+    private Transform mainCameraTransform;
     
     private float barInitialScaleX;
     private Vector3 barInitialPos;
@@ -121,6 +123,12 @@ public class CustomerController : MonoBehaviour, IInteractable
         requestBubble.SetActive(false);
         patienceBarFG.SetActive(false);
         patienceBarBG.SetActive(false);
+
+        mainCameraTransform = Camera.main?.transform;
+        if (mainCameraTransform == null)
+        {
+            Debug.LogWarning("Main camera not found! Customer will not face the camera.");
+        }
         
         
         if (isOnSeat)
@@ -241,6 +249,21 @@ public class CustomerController : MonoBehaviour, IInteractable
 
         // Manage customer's mood by changing its material
         // updateCustomerMood();
+
+        // Rotate request bubble to face the camera
+        if (requestBubble.activeSelf && mainCameraTransform != null)
+        {
+            Vector3 directionToCamera = mainCameraTransform.position - requestBubble.transform.position;
+
+            // Optionally remove vertical tilt:
+            directionToCamera.y = 0;
+
+            if (directionToCamera.sqrMagnitude > 0.001f)
+            {
+                requestBubble.transform.rotation = Quaternion.LookRotation(directionToCamera);
+            }
+        }
+
     }
 
     //***************************************************************************//
@@ -496,6 +519,7 @@ public class CustomerController : MonoBehaviour, IInteractable
     //***************************************************************************//
     public void TryGivePizza(GameObject obj)
     {
+        requestBubble.SetActive(false);
         if (isLeaving) return;
 
         Pizza pizza = obj.GetComponent<Pizza>();
