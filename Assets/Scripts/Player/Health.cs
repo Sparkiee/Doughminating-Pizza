@@ -11,8 +11,7 @@ public class Health : MonoBehaviour
     [SerializeField] private GameObject healthUI; // Prefab for the health bar UI
     [SerializeField] private GameObject healthy;
     [SerializeField] private GameObject ruined;
-    [SerializeField] private bool isGodMode = false;
-    [SerializeField] private Toggle godModeToggle; // Toggle for enabling/disabling god mode
+    
 
     private List<GameObject> healthBar = new List<GameObject>();
     private SC_Player playerController;
@@ -44,22 +43,11 @@ public class Health : MonoBehaviour
             Debug.LogWarning("SC_Player not found! Game Over functionality will not work.");
         }
         updateHealth();
-
-        if (godModeToggle != null)
-        {
-            godModeToggle.onValueChanged.AddListener(delegate { ToggleGodMode(godModeToggle.isOn); });
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void TakeDamage(int damage)
     {
-        if (isGodMode)
+        if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.GodMode))
         {
             Debug.Log("God mode is active, no damage taken.");
             return; // Skip damage if in god mode
@@ -90,7 +78,7 @@ public class Health : MonoBehaviour
 
     public void Heal(int amount)
     {
-        if (isGodMode)
+        if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.GodMode))
         {
             Debug.Log("God mode is active, no healing applied.");
             return; // Skip healing if in god mode
@@ -101,18 +89,5 @@ public class Health : MonoBehaviour
             health = maxHealth; // Ensure health doesn't exceed maxHealth
         }
         updateHealth();
-    }
-
-    private void ToggleGodMode(bool isActive)
-    {
-        isGodMode = isActive;
-        if (isGodMode)
-        {
-            Debug.Log("God mode activated.");
-        }
-        else
-        {
-            Debug.Log("God mode deactivated.");
-        }
     }
 }
