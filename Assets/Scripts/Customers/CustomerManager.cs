@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomerManager : MonoBehaviour   // class and file with the same name
 {
@@ -372,7 +373,14 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
                 }
             }
             Reset();
+
+            
+            Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false; 
             Debug.Log("CustomerManager game state reset!");
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
