@@ -149,6 +149,29 @@ public class Oven : MonoBehaviour, IInteractable
         // burnt dough colour for the pizza
         Color burntColor = new Color32(128, 64, 26, 255); // Dark brown color for burnt pizza
 
+        // 💥 Instant cook cheat logic
+        if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.InstantPizza))
+        {
+            pizza.SetCookState(CookState.Cooked);
+            pizza.SetPizzaColor(new Color32(164, 143, 96, 255)); // Set to cooked color (darker brown)
+            currentState = CookState.Cooked;
+
+            if (ovenTimerText != null)
+            {
+                ovenTimerText.text = "READY!";
+                ovenTimerText.color = Color.yellow;
+                ovenTimerText.enabled = true;
+            }
+
+            if (ovenTimerAudioSource != null)
+                ovenTimerAudioSource.Play();
+
+            if (blinkingCoroutine == null)
+                blinkingCoroutine = StartCoroutine(BlinkCookedTimer());
+
+            yield break;
+        }
+
         while (isCooking)
         {
             cookTimer += Time.deltaTime;
@@ -187,6 +210,23 @@ public class Oven : MonoBehaviour, IInteractable
                 if (pizza.GetCookLevel() == CookState.Cooked)
                 {
                     pizza.SetPizzaColor(burntColor); // Set to burnt color
+                    if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.NoBurn))
+                    {
+                        pizza.SetCookState(CookState.Cooked);
+                        currentState = CookState.Cooked;
+
+                        if (ovenTimerText != null)
+                        {
+                            ovenTimerText.text = "READY!";
+                            ovenTimerText.color = Color.yellow;
+                        }
+                        if (ovenTimerAudioSource != null && !ovenTimerAudioSource.isPlaying)
+                            ovenTimerAudioSource.Play();
+
+                        // Just wait for the next frame instead of looping instantly
+                        yield return null;
+                        continue;
+                    }
                     pizza.SetCookState(CookState.Burnt);
                     currentState = CookState.Burnt;
                 }
