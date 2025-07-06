@@ -219,6 +219,12 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     public static int GetCompletedOrders() => completedOrders;
     public int GetCurrentCustomerLimit() => currentCustomerLimit;
 
+    public List<CustomerController> GetActiveCustomers()
+    {
+        CustomerController[] allCustomers = FindObjectsOfType<CustomerController>();
+        return new List<CustomerController>(allCustomers);
+    }
+
     // Calculate adjusted spawn interval based on difficulty
     private float GetAdjustedSpawnInterval()
     {

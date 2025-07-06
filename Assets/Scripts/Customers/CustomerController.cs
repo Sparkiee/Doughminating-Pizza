@@ -72,10 +72,11 @@ public class CustomerController : MonoBehaviour, IInteractable
     [SerializeField] private Transform iconRowTransform;
 
     // Private customer variables
-    private string customerName;                // random name
+    public string customerName { get; private set; }                // random name
     private float currentCustomerPatience;      // current patience of the customer
     private bool isOnSeat;                      // is customer on his seat?
     private bool isLeaving;                     // is customer leaving?
+    public bool IsOrderCompleted { get { return isLeaving; } }
     private float creationTime;                 // when was this customer created
     private Vector3 startingPosition;           // reference position
     private List<System.Type> wantedIngredients = new();  // what ingredients does this customer want?
@@ -504,6 +505,11 @@ public class CustomerController : MonoBehaviour, IInteractable
             ingredientNames.Add(ingredientType.Name);
         }
         return string.Join(", ", ingredientNames);
+    }
+
+    public float GetPatienceTimeLeft()
+    {
+        return currentCustomerPatience;
     }
 
     //***************************************************************************//
