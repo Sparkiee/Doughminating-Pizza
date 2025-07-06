@@ -53,10 +53,26 @@ public class SC_Player : MonoBehaviour
 
         _actions.Player.Pause.performed += _ => TogglePauseMenu();
         // _actions.Player.Pause.canceled += _ => TogglePauseMenu();
+        
+        // Enable actions after setup
+        _actions.Enable();
     }
 
-    void OnEnable() => _actions.Enable();
-    void OnDisable() => _actions.Disable();
+    void OnEnable() 
+    {
+        if (_actions != null)
+        {
+            _actions.Enable();
+        }
+    }
+    
+    void OnDisable() 
+    {
+        if (_actions != null)
+        {
+            _actions.Disable();
+        }
+    }
 
     void Start()
     {
