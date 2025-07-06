@@ -96,11 +96,11 @@ public class Oven : MonoBehaviour, IInteractable
         if (currentPizza == null && playerHand != null && playerHand.IsHoldingItem)
         {
             if (playerHand.HeldItem.GetComponent<Pizza>() != null)
-                return "Press 'E' to place pizza in oven";
+                return "Place pizza in oven";
         }
         else if (currentPizza != null)
         {
-            return "Press 'E' to remove pizza";
+            return "Remove pizza from oven";
         }
         return "";
     }
