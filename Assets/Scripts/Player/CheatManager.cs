@@ -37,6 +37,7 @@ public class CheatManager : MonoBehaviour
             Debug.Log("Cheat panel is disabled in production mode.");
         #endif
     }
+    
     void Start() {
         foreach (var cheat in cheats) {
             if (cheat.toggle != null) {

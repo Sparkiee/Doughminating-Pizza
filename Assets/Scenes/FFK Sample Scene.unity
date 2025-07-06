@@ -12999,8 +12999,6 @@ MonoBehaviour:
   healthUI: {fileID: 13359371}
   healthy: {fileID: 3959336421423576803, guid: c74c3852fbb439d448c2b023b0164e62, type: 3}
   ruined: {fileID: 5356804802077677655, guid: c29b85dce2e303342918c836fe64c551, type: 3}
-  isGodMode: 0
-  godModeToggle: {fileID: 1852170829}
 --- !u!1001 &546328125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28665,7 +28663,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32b1906eef722184d897805f985ccf15, type: 2}
   m_sharedMaterial: {fileID: 7805759917053555725, guid: 32b1906eef722184d897805f985ccf15,
