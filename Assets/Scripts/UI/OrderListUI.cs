@@ -20,7 +20,6 @@ public class OrderListUI : MonoBehaviour
         public readonly Color RowBackgroundAlternate; // For zebra striping
         public readonly Color HeaderText;
         public readonly Color PrimaryText;
-        public readonly Color SeparatorColor;
 
         public UITheme(float a)
         {
@@ -29,7 +28,6 @@ public class OrderListUI : MonoBehaviour
             RowBackgroundAlternate = new Color(0.2f, 0.2f, 0.22f, 0.9f); // A slightly lighter grey
             HeaderText = new Color(0.9f, 0.9f, 0.9f, 1f);
             PrimaryText = new Color(0.8f, 0.8f, 0.8f, 1f);
-            SeparatorColor = new Color(1f, 1f, 1f, 0.1f);
         }
     }
     private readonly UITheme theme = new UITheme(1);
@@ -51,6 +49,16 @@ public class OrderListUI : MonoBehaviour
         if (Keyboard.current != null && Keyboard.current.oKey.wasPressedThisFrame)
         {
             ToggleOrderList();
+        }
+
+        // Close the order panel when Esc is pressed (game pause)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && isPanelActive)
+        {
+            isPanelActive = false;
+            if (orderListPanel != null)
+            {
+                orderListPanel.SetActive(false);
+            }
         }
 
         if (isPanelActive)
@@ -81,19 +89,34 @@ public class OrderListUI : MonoBehaviour
             if (panelImage == null) panelImage = orderListPanel.AddComponent<Image>();
             panelImage.color = theme.PanelBackground;
 
+            // Configure the panel's RectTransform for better sizing
+            RectTransform panelRect = orderListPanel.GetComponent<RectTransform>();
+            if (panelRect != null)
+            {
+                // Set a wider fixed size to accommodate longer order descriptions
+                panelRect.sizeDelta = new Vector2(800, 500); // Wider: 800x500
+                panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+                panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+                panelRect.pivot = new Vector2(0.5f, 0.5f);
+                panelRect.anchoredPosition = Vector2.zero;
+            }
+
             VerticalLayoutGroup panelLayout = orderListPanel.GetComponent<VerticalLayoutGroup>();
             if (panelLayout == null) panelLayout = orderListPanel.AddComponent<VerticalLayoutGroup>();
-            panelLayout.padding = new RectOffset(20, 20, 20, 20);
-            panelLayout.spacing = 10;
+            panelLayout.padding = new RectOffset(25, 25, 25, 25);
+            panelLayout.spacing = 12;
             panelLayout.childAlignment = TextAnchor.UpperCenter;
             panelLayout.childControlWidth = true;
             panelLayout.childControlHeight = false;
             panelLayout.childForceExpandWidth = true;
             panelLayout.childForceExpandHeight = false;
 
+            // Remove ContentSizeFitter from the main panel to prevent conflicts
             ContentSizeFitter panelFitter = orderListPanel.GetComponent<ContentSizeFitter>();
-            if (panelFitter == null) panelFitter = orderListPanel.AddComponent<ContentSizeFitter>();
-            panelFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            if (panelFitter != null)
+            {
+                DestroyImmediate(panelFitter);
+            }
 
             // Configure the title
             Transform titleTransform = orderListPanel.transform.Find("Title");
@@ -102,13 +125,13 @@ public class OrderListUI : MonoBehaviour
                 TextMeshProUGUI titleText = titleTransform.GetComponent<TextMeshProUGUI>();
                 if (titleText != null)
                 {
-                    titleText.fontSize = 32;
+                    titleText.fontSize = 36;
                     titleText.fontStyle = FontStyles.Bold;
                     titleText.color = theme.HeaderText;
 
                     LayoutElement titleLayout = titleText.GetComponent<LayoutElement>();
                     if (titleLayout == null) titleLayout = titleText.gameObject.AddComponent<LayoutElement>();
-                    titleLayout.minHeight = 40;
+                    titleLayout.minHeight = 45;
                 }
             }
 
@@ -123,12 +146,29 @@ public class OrderListUI : MonoBehaviour
             }
         }
 
-        // Configure the container for order rows
+        // Configure the container for order rows with ScrollRect for long lists
         if (orderListContainer != null)
         {
             VerticalLayoutGroup containerLayout = orderListContainer.GetComponent<VerticalLayoutGroup>();
             if (containerLayout == null) containerLayout = orderListContainer.gameObject.AddComponent<VerticalLayoutGroup>();
-            containerLayout.spacing = 5;
+            containerLayout.spacing = 8;
+            containerLayout.padding = new RectOffset(0, 0, 0, 10);
+
+            // Add ContentSizeFitter only to the container, not the main panel
+            ContentSizeFitter containerFitter = orderListContainer.GetComponent<ContentSizeFitter>();
+            if (containerFitter == null) containerFitter = orderListContainer.gameObject.AddComponent<ContentSizeFitter>();
+            containerFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            // Configure the container's RectTransform
+            RectTransform containerRect = orderListContainer.GetComponent<RectTransform>();
+            if (containerRect != null)
+            {
+                // Let the container expand naturally within the fixed panel size
+                containerRect.anchorMin = new Vector2(0, 0);
+                containerRect.anchorMax = new Vector2(1, 1);
+                containerRect.offsetMin = Vector2.zero;
+                containerRect.offsetMax = Vector2.zero;
+            }
         }
     }
 
@@ -143,7 +183,7 @@ public class OrderListUI : MonoBehaviour
         headerRowObj.transform.SetParent(orderListPanel.transform, false);
 
         HorizontalLayoutGroup headerLayout = headerRowObj.AddComponent<HorizontalLayoutGroup>();
-        headerLayout.padding = new RectOffset(10, 10, 5, 10);
+        headerLayout.padding = new RectOffset(15, 15, 8, 8);
         headerLayout.spacing = 20;
         headerLayout.childAlignment = TextAnchor.MiddleCenter;
 
@@ -151,6 +191,7 @@ public class OrderListUI : MonoBehaviour
         CreateHeaderLabel(headerRowObj, "NameLabel", "Name", 0);
         CreateHeaderLabel(headerRowObj, "OrderLabel", "Order", 1); // This one is flexible
         CreateHeaderLabel(headerRowObj, "TimeLabel", "Time Left", 0);
+
     }
 
     /// <summary>
@@ -176,15 +217,16 @@ public class OrderListUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Efficiently updates the list of orders, only changing what is necessary.
+    /// Efficiently updates the list of orders, only adding new customers and removing completed ones.
     /// </summary>
     private void UpdateOrderList()
     {
         if (CustomerManager.Instance == null) return;
 
-        HashSet<CustomerController> toRemove = new HashSet<CustomerController>(activeOrderRows.Keys);
         List<CustomerController> activeCustomers = CustomerManager.Instance.GetActiveCustomers();
+        HashSet<CustomerController> currentCustomers = new HashSet<CustomerController>();
 
+        // First pass: Add new customers and update existing ones
         foreach (var customer in activeCustomers)
         {
             // Ignore customers who have finished their order
@@ -193,13 +235,12 @@ public class OrderListUI : MonoBehaviour
                 continue;
             }
 
-            toRemove.Remove(customer);
+            currentCustomers.Add(customer);
 
             if (activeOrderRows.ContainsKey(customer))
             {
                 // This customer is already in the list, just update their time left
                 GameObject orderRow = activeOrderRows[customer];
-                // Ensure the row and its components are not null before updating
                 if (orderRow != null)
                 {
                     TextMeshProUGUI timeLeftText = orderRow.transform.Find("TimeLeft")?.GetComponent<TextMeshProUGUI>();
@@ -211,14 +252,11 @@ public class OrderListUI : MonoBehaviour
             }
             else
             {
-                // This is a new customer, create a new row for them
+                // This is a new customer, create a new row for them at the bottom
                 GameObject orderRow = Instantiate(orderRowPrefab, orderListContainer);
                 
-                // Determine the color based on the current number of rows (for zebra striping)
-                bool isEvenRow = (orderListContainer.childCount - 1) % 2 == 0;
-
                 // Configure the layout for the new row
-                ConfigureOrderRow(orderRow, isEvenRow);
+                ConfigureOrderRow(orderRow);
 
                 // Populate the text fields
                 TextMeshProUGUI customerNameText = orderRow.transform.Find("CustomerName").GetComponent<TextMeshProUGUI>();
@@ -233,7 +271,16 @@ public class OrderListUI : MonoBehaviour
             }
         }
 
-        // Remove rows for customers who are no longer active
+        // Second pass: Remove customers who are no longer active
+        List<CustomerController> toRemove = new List<CustomerController>();
+        foreach (var customer in activeOrderRows.Keys)
+        {
+            if (!currentCustomers.Contains(customer))
+            {
+                toRemove.Add(customer);
+            }
+        }
+
         foreach (var customer in toRemove)
         {
             if (activeOrderRows.TryGetValue(customer, out GameObject row))
@@ -247,12 +294,12 @@ public class OrderListUI : MonoBehaviour
     /// <summary>
     /// Configures the layout components for a newly instantiated order row.
     /// </summary>
-    private void ConfigureOrderRow(GameObject orderRow, bool isEven)
+    private void ConfigureOrderRow(GameObject orderRow)
     {
-        // Add a background image for a card-like effect with alternating colors
+        // Add a background image for a card-like effect
         Image rowImage = orderRow.GetComponent<Image>();
         if (rowImage == null) rowImage = orderRow.AddComponent<Image>();
-        rowImage.color = isEven ? theme.RowBackground : theme.RowBackgroundAlternate;
+        rowImage.color = theme.RowBackground;
         // If you have a rounded sprite, you can assign it here for better visuals
         // rowImage.sprite = ...;
         // rowImage.type = Image.Type.Sliced;
