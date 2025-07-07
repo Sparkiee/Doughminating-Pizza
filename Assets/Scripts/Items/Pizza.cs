@@ -95,8 +95,6 @@ public class Pizza : Ingredient
 
     void Start()
     {
-        Debug.Log("Pizza created with cook level: " + CookLevel);
-
         // Initialize panel UI
         if (pizzaUI != null)
         {
@@ -293,4 +291,15 @@ public class Pizza : Ingredient
     {
         pizzaUI.GetComponent<PizzaUIController>().addIngredient(ingredient);
     }
+
+    public List<string> GetIngredientNames()
+    {
+        List<string> result = new List<string>();
+        if (hasSauce) result.Add("Sauce");
+        if (hasCheese) result.Add("Cheese");
+        if (hasBacon) result.Add("Bacon");
+        if (hasPineapple) result.Add("Pineapple");
+        if (hasPepperoni) result.Add("Pepperoni");
+        return result;
+    }  
 }

@@ -37,6 +37,8 @@ public class PlayerInteraction : MonoBehaviour
     }
     void HandleInteractionCheck()
     {
+        Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * interactionDistance, Color.red);
+
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 

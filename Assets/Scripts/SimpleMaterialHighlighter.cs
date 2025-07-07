@@ -13,6 +13,7 @@ public class SimpleMaterialHighlighter : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("SimpleMaterialHighlighter initialized on " + gameObject.name);
         renderers = GetComponentsInChildren<Renderer>(true);
         originalMaterials = new Material[renderers.Length][];
 
