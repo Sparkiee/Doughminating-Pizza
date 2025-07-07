@@ -126,17 +126,13 @@ public class Oven : MonoBehaviour, IInteractable
         Debug.Log($"Starting to cook pizza: {pizza.name}");
         isCooking = true;
         currentState = pizza.GetCookLevel();
-        cookTimer = currentState switch
-        {
-            CookState.Raw => 0f,
-            CookState.Cooked => cookDuration,
-            CookState.Burnt => burnDuration,
-            _ => 0f // Default case
-        };
+        
+        // Use the pizza's existing cooking time instead of calculating from state
+        cookTimer = pizza.GetTotalCookingTime();
 
         if (ovenTimerText != null)
         {
-            float remainingTime = Mathf.Max(0f, burnDuration - cookTimer);
+            float remainingTime = Mathf.Max(0f, pizza.GetBurnDuration() - cookTimer);
             System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(remainingTime);
             ovenTimerText.text = timeSpan.ToString(@"mm\:ss");
             Debug.Log($"Oven Timer Text: {ovenTimerText.text}");
@@ -174,29 +170,31 @@ public class Oven : MonoBehaviour, IInteractable
 
         while (isCooking)
         {
-            cookTimer += Time.deltaTime;
+            float deltaTime = Time.deltaTime;
+            cookTimer += deltaTime;
+            
+            // Update the pizza's cooking time
+            pizza.CookForTime(deltaTime);
+            
+            // Update current state from pizza
+            currentState = pizza.GetCookLevel();
 
-            float t = Mathf.Clamp01(cookTimer / burnDuration);
+            float totalBurnDuration = pizza.GetBurnDuration();
+            float totalCookDuration = pizza.GetCookDuration();
+            float t = Mathf.Clamp01(cookTimer / totalBurnDuration);  // this ensures t is between 0 and 1
             pizza.SetPizzaColor(Color.Lerp(originalColor, burntColor, t));
 
             // Countdown display only before cooked
-            if (ovenTimerText != null && cookTimer < cookDuration)
+            if (ovenTimerText != null && cookTimer < totalCookDuration)
             {
-                float remainingTime = Mathf.Max(0f, cookDuration - cookTimer);
+                float remainingTime = pizza.GetRemainingTimeToCooked();
                 System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(remainingTime);
                 ovenTimerText.text = timeSpan.ToString(@"mm\:ss");
             }
 
             // Start blinking + audio when pizza is cooked
-            if (cookTimer >= cookDuration)
+            if (currentState == CookState.Cooked && cookTimer >= totalCookDuration)
             {
-                if (pizza.GetCookLevel() == CookState.Raw)
-                {
-                    pizza.SetPizzaColor(originalColor); // Reset to original color before cooking
-                    pizza.SetCookState(CookState.Cooked);
-                    currentState = CookState.Cooked;
-                }
-
                 if (ovenTimerAudioSource != null && !ovenTimerAudioSource.isPlaying)
                     ovenTimerAudioSource.Play();
 
@@ -205,30 +203,27 @@ public class Oven : MonoBehaviour, IInteractable
             }
 
             // Stop blinking and transition to burnt
-            if (cookTimer >= burnDuration)
+            if (currentState == CookState.Burnt)
             {
-                if (pizza.GetCookLevel() == CookState.Cooked)
+                pizza.SetPizzaColor(burntColor); // Set to burnt color
+                
+                if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.NoBurn))
                 {
-                    pizza.SetPizzaColor(burntColor); // Set to burnt color
-                    if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.NoBurn))
+                    // Force pizza back to cooked state if no-burn cheat is active
+                    pizza.SetCookState(CookState.Cooked);
+                    currentState = CookState.Cooked;
+
+                    if (ovenTimerText != null)
                     {
-                        pizza.SetCookState(CookState.Cooked);
-                        currentState = CookState.Cooked;
-
-                        if (ovenTimerText != null)
-                        {
-                            ovenTimerText.text = "READY!";
-                            ovenTimerText.color = Color.yellow;
-                        }
-                        if (ovenTimerAudioSource != null && !ovenTimerAudioSource.isPlaying)
-                            ovenTimerAudioSource.Play();
-
-                        // Just wait for the next frame instead of looping instantly
-                        yield return null;
-                        continue;
+                        ovenTimerText.text = "READY!";
+                        ovenTimerText.color = Color.yellow;
                     }
-                    pizza.SetCookState(CookState.Burnt);
-                    currentState = CookState.Burnt;
+                    if (ovenTimerAudioSource != null && !ovenTimerAudioSource.isPlaying)
+                        ovenTimerAudioSource.Play();
+
+                    // Just wait for the next frame instead of looping instantly
+                    yield return null;
+                    continue;
                 }
 
                 if (ovenTimerText != null)

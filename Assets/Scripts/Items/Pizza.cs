@@ -7,6 +7,11 @@ public class Pizza : Ingredient
     [SerializeField] private GameObject pizzaUI;
     [SerializeField] private CookState CookLevel = CookState.Raw;
 
+    // Cooking time tracking
+    [SerializeField] private float totalCookingTime = 0f;
+    [SerializeField] private float cookDuration = 5f; // Time to go from Raw to Cooked
+    [SerializeField] private float burnDuration = 10f; // Time to go from Raw to Burnt
+
     [SerializeField] private bool hasSauce = false;
     [SerializeField] private bool hasCheese = false;
     [SerializeField] private bool hasBacon = false;
@@ -34,6 +39,59 @@ public class Pizza : Ingredient
     public bool HasPineapple => hasPineapple;
     public bool HasPepperoni => hasPepperoni;
     public CookState GetCookLevel() => CookLevel;
+
+    // Cooking time properties and methods
+    public float GetTotalCookingTime() => totalCookingTime;
+    public float GetCookDuration() => cookDuration;
+    public float GetBurnDuration() => burnDuration;
+    
+    public void AddCookingTime(float timeToAdd)
+    {
+        totalCookingTime += timeToAdd;
+        UpdateCookStateBasedOnTime();
+    }
+    
+    public void SetTotalCookingTime(float time)
+    {
+        totalCookingTime = time;
+        UpdateCookStateBasedOnTime();
+    }
+    
+    private void UpdateCookStateBasedOnTime()
+    {
+        CookState previousState = CookLevel;
+        
+        if (totalCookingTime >= burnDuration)
+        {
+            CookLevel = CookState.Burnt;
+        }
+        else if (totalCookingTime >= cookDuration)
+        {
+            CookLevel = CookState.Cooked;
+        }
+        else
+        {
+            CookLevel = CookState.Raw;
+        }
+        
+        // Update UI if state changed
+        if (previousState != CookLevel && pizzaUI != null)
+        {
+            pizzaUI.GetComponent<PizzaUIController>().setCookLevel(CookLevel);
+        }
+        
+        Debug.Log($"Pizza cooking time: {totalCookingTime:F1}s, Cook state: {CookLevel}");
+    }
+    
+    public float GetRemainingTimeToCooked()
+    {
+        return Mathf.Max(0f, cookDuration - totalCookingTime);
+    }
+    
+    public float GetRemainingTimeToBurnt()
+    {
+        return Mathf.Max(0f, burnDuration - totalCookingTime);
+    }
 
     void Start()
     {
@@ -165,22 +223,43 @@ public class Pizza : Ingredient
 
     public void Cook()
     {
+        // Legacy method - now uses time-based cooking
+        // This method can be used for instant state changes if needed
         if (this.CookLevel == CookState.Raw)
         {
-            this.CookLevel = CookState.Cooked;
+            SetTotalCookingTime(cookDuration); // Jump to cooked state
         }
         else if (this.CookLevel == CookState.Cooked)
         {
-            this.CookLevel = CookState.Burnt;
+            SetTotalCookingTime(burnDuration); // Jump to burnt state
         }
-
-        pizzaUI.GetComponent<PizzaUIController>().setCookLevel(this.CookLevel);
+    }
+    
+    public void CookForTime(float deltaTime)
+    {
+        // Time-based cooking method - use this for gradual cooking
+        AddCookingTime(deltaTime);
     }
 
     public void SetCookState(CookState newState)
     {
         CookLevel = newState;
-        Debug.Log($"Pizza cook state changed to: {newState}");
+        
+        // Update cooking time to match the state
+        switch (newState)
+        {
+            case CookState.Raw:
+                totalCookingTime = 0f;
+                break;
+            case CookState.Cooked:
+                totalCookingTime = cookDuration;
+                break;
+            case CookState.Burnt:
+                totalCookingTime = burnDuration;
+                break;
+        }
+        
+        Debug.Log($"Pizza cook state changed to: {newState}, cooking time: {totalCookingTime:F1}s");
 
         if (pizzaUI != null)
         {
