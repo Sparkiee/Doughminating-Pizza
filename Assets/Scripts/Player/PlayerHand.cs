@@ -75,19 +75,26 @@ public class PlayerHand : MonoBehaviour
     {
         if (heldItem == null) yield break;
 
-        Vector3 originalPosition = heldItem.transform.localPosition;
+        Transform shakeTarget = heldItem.transform;
+        Vector3 originalPosition = shakeTarget.localPosition;
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
+            if (shakeTarget == null) yield break;
+
             float xOffset = Random.Range(-intensity, intensity);
             float yOffset = Random.Range(-intensity, intensity);
-            heldItem.transform.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
+            shakeTarget.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
+
             elapsed += Time.deltaTime;
             yield return null;
         }
-        heldItem.transform.localPosition = originalPosition; // Reset position after shaking
+
+        if (shakeTarget != null)
+            shakeTarget.localPosition = originalPosition;
     }
+    
     public void Remove()
     {
         if (heldItem != null)
@@ -99,8 +106,8 @@ public class PlayerHand : MonoBehaviour
             {
                 Physics.IgnoreCollision(playerCollider, itemCollider);
             }
-            Destroy(heldItem);
             heldItem.transform.SetParent(null);
+            Destroy(heldItem);
             heldItem = null;
         }
     }

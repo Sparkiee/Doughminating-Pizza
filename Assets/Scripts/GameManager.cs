@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Customer Prefabs")]
     [SerializeField] private GameObject[] customerPrefabs;
+    [SerializeField] private GameObject orderBubblePrefab;
+    [SerializeField] private GameObject patienceBarPrefab;
 
     [Header("Game State")]
     [SerializeField] private int totalCustomers = 0;
@@ -100,11 +102,28 @@ public class GameManager : MonoBehaviour
         if (customer.GetComponent<Customer>() == null)
         {
             customer.AddComponent<Customer>();
+
         }
+        if (patienceBarPrefab != null) {
+            Vector3 patienceBarPosition = customer.transform.position + new Vector3(0, 2.0f, 0); // Adjust Y offset as needed
+            GameObject patienceBar = Instantiate(patienceBarPrefab, patienceBarPosition, Quaternion.identity, customer.transform);
+            customer.GetComponent<Customer>().SetPatience(patienceTime, patienceBar);
+        }
+
+        if (orderBubblePrefab != null) {
+            Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0); // Adjust Y offset as needed
+            GameObject orderBubble = Instantiate(orderBubblePrefab, orderBubblePosition, Quaternion.identity, customer.transform);
+            customer.GetComponent<Customer>().AddOrderBubble(orderBubble);
+            Order order = customer.AddComponent<Order>();
+            order.InitializeOrderBubble(orderBubble);
+        }
+
         this.activeCustomers.Add(customer);
         this.totalCustomers++;
-        customer.AddComponent<Order>();
+
         customer.GetComponent<Customer>().WalkToCounter(GetAvailableSeat());
+        customer.GetComponent<Customer>().SetExitPoint(exitPoint.transform);
+
     }
 
     private string GenerateRandomName() {
