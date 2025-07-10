@@ -8,6 +8,7 @@ public class Customer : MonoBehaviour, IInteractable
     private Transform targetSeat;
     [SerializeField] private float moveSpeed = 2.0f;
     [SerializeField] private bool isMoving = false;
+    private bool isLeaving = false;
     private bool isServed = false;
     private bool hasFailed = true;
 
@@ -57,7 +58,7 @@ public class Customer : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        if(isMoving && isServed)
+        if(isMoving && isLeaving)
         {
             // Move towards the exit point
             float step = moveSpeed * Time.deltaTime; // Calculate distance to move
@@ -80,7 +81,7 @@ public class Customer : MonoBehaviour, IInteractable
             // Check if reached the target seat
             if (Vector3.Distance(transform.position, targetSeat.position) < 0.001f)
             {
-                if(!isServed) {
+                if(!isLeaving) {
                     OnArriveAtSeat();
                 }
             }
@@ -103,7 +104,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if(isMoving || isServed) return;
+        if(isMoving || isLeaving || isServed) return;
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
         TryGetComponent<AudioSource>(out AudioSource audioSource);
@@ -112,6 +113,7 @@ public class Customer : MonoBehaviour, IInteractable
         {
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
+            this.isServed = true;
             // Logic for when the player is holding an ingredient
             if(ingredient.TryGetComponent<Pizza>(out Pizza pizza))
             {
@@ -220,7 +222,7 @@ public class Customer : MonoBehaviour, IInteractable
     {
         float elapsedTime = 0f;
 
-        while (elapsedTime < patience && !isServed)
+        while (elapsedTime < patience && !isLeaving)
         {
             currentPatience = Mathf.Max(0, patience - elapsedTime);
             float ratio = Mathf.Clamp01(currentPatience / patience);
@@ -278,6 +280,6 @@ public class Customer : MonoBehaviour, IInteractable
         transform.rotation = targetRotation; // Snap to final rotation to exit door
         // bool to exit the door
         isMoving = true;
-        isServed = true;
+        isLeaving = true;
     }
 }
