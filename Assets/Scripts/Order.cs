@@ -84,7 +84,6 @@ public class Order : MonoBehaviour
     {
         if (!ingredients.Contains(ingredient) && bubbleIcons != null)
         {
-            Debug.Log($"[ORDER] Adding ingredient: {ingredient}");
             ingredients.Add(ingredient);
             GameObject ingredientIcon = new GameObject("Icon_" + ingredient.ToString());
             Image iconImage = ingredientIcon.AddComponent<Image>();
@@ -99,31 +98,23 @@ public class Order : MonoBehaviour
     public bool ComparePizzaToOrder(Pizza pizza)
     {
         if (pizza == null) return false;
+        if(pizza.GetCookLevel() != CookState.Cooked) return false;
+        if(pizza.GetIngredientNames().Count < requiredIngredients.Count) return false;
 
-        // // Get the actual pizza ingredients
-        // List<IngredientType> pizzaIngredients = pizza.GetIngredients();
+        // Get the actual pizza ingredients
+        List<string> pizzaIngredients = pizza.GetIngredientNames();
+        Debug.Log($"[ORDER] Comparing pizza ingredients: {string.Join(", ", pizzaIngredients)}");
+        Debug.Log($"[ORDER] Comparing order ingredients: {string.Join(", ", ingredients)}");
+        for (int i = 0; i < ingredients.Count; i++)
+        {
+            if (!pizzaIngredients.Contains(ingredients[i].ToString()))
+            {
+                Debug.Log($"[ORDER] Pizza is missing ingredient: {ingredients[i]}");
+                return false;
+            }
+        }
 
-        // // 1. Check if all required ingredients are present
-        // foreach (IngredientType required in requiredIngredients)
-        // {
-        //     if (!pizzaIngredients.Contains(required))
-        //     {
-        //         Debug.Log($"[ORDER] Pizza is missing required ingredient: {required}");
-        //         return false;
-        //     }
-        // }
-
-        // // 2. Check if any pizza ingredient is not in the order (i.e., it's an extra)
-        // foreach (IngredientType ingredient in pizzaIngredients)
-        // {
-        //     if (!ingredients.Contains(ingredient))
-        //     {
-        //         Debug.Log($"[ORDER] Pizza has extra ingredient not in order: {ingredient}");
-        //         return false;
-        //     }
-        // }
-
-        // Debug.Log("[ORDER] Pizza matches the order!");
+        Debug.Log("[ORDER] Pizza matches the order!");
         return true;
     }
 }

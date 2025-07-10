@@ -2007,6 +2007,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 241393083461029318}
+  - component: {fileID: 6326520374557002121}
   m_Layer: 0
   m_Name: BaseCharacter
   m_TagString: Untagged
@@ -2034,6 +2035,27 @@ Transform:
   - {fileID: 5432469745498895632}
   m_Father: {fileID: 2750536015425250604}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!95 &6326520374557002121
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3104121202471977029}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f6380c9cdfbe37b48baffa7f1e9c76fb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3271014239631468423
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[System.Serializable]
+public class CustomerSeat {
+    public Transform location;
+    public bool isOccupied;
+}
+
 public class GameManager : MonoBehaviour
 {
     // Singleton instance
     public static GameManager Instance { get; private set; }
-    [System.Serializable]
-    private class CustomerSeat {
-        public Transform location;
-        public bool isOccupied;
-    }
 
     [Header("Settings")]
     [SerializeField] private int currentLevel = 1;
-    [SerializeField] private int patienceTime = 45;
+    [SerializeField] private int patienceTime = 90;
     [SerializeField] private int customersPerLevel = 2;
 
     private bool gameStarted = false;
@@ -123,7 +124,22 @@ public class GameManager : MonoBehaviour
 
         customer.GetComponent<Customer>().WalkToCounter(GetAvailableSeat());
         customer.GetComponent<Customer>().SetExitPoint(exitPoint.transform);
+    }
 
+    public void CustomerServed(GameObject customer, bool hasFailed) {
+        if (customer == null) return;
+        this.servedCustomers++;
+        if (hasFailed) {
+            this.failedCustomers++;
+            this.patienceTime -= 5;
+        }
+        this.activeCustomers.Remove(customer);
+        if(servedCustomers - failedCustomers >= customersPerLevel * currentLevel) {
+            currentLevel++;
+            levelText.text = currentLevel.ToString();
+            Debug.Log($"Level {currentLevel} completed! Total served: {servedCustomers}");
+        }
+        Destroy(customer);
     }
 
     private string GenerateRandomName() {
@@ -131,7 +147,7 @@ public class GameManager : MonoBehaviour
         return names[Random.Range(0, names.Length)];
     }
 
-    private Transform GetAvailableSeat() {
+    private CustomerSeat GetAvailableSeat() {
         // Collect all available seats
         List<CustomerSeat> availableSeats = new List<CustomerSeat>();
         foreach (CustomerSeat seat in customerSeats) {
@@ -144,6 +160,6 @@ public class GameManager : MonoBehaviour
         int randomIndex = Random.Range(0, availableSeats.Count);
         availableSeats[randomIndex].isOccupied = true;
         // To get the global position, use:
-        return availableSeats[randomIndex].location;
+        return availableSeats[randomIndex];
     }
 }

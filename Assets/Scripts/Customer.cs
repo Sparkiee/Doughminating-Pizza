@@ -9,6 +9,7 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private float moveSpeed = 2.0f;
     [SerializeField] private bool isMoving = false;
     private bool isServed = false;
+    private bool hasFailed = true;
 
     private GameObject orderBubble;
     private GameObject patienceBar;
@@ -16,6 +17,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     private float patience;
     private float currentPatience;
+    private CustomerSeat assignedSeat;
 
     private float barInitialScaleX;
     private Vector3 barInitialPos;
@@ -27,9 +29,19 @@ public class Customer : MonoBehaviour, IInteractable
     private Health playerHealth;
 
     private Camera playerCamera;
+
+    private Animator animator;
     
     void Start()
     {
+        this.animator = transform.Find("BaseCharacter")?.GetComponent<Animator>();
+        if (this.animator == null)
+        {
+            Debug.LogError("Animator component not found on BaseCharacter!");
+        }
+        else {
+            Debug.Log("Animator component found on BaseCharacter.");
+        }
         this.playerHealth = FindObjectOfType<Health>();
         if (this.playerHealth == null)
         {
@@ -44,7 +56,6 @@ public class Customer : MonoBehaviour, IInteractable
     {
         if(isMoving && isServed)
         {
-            Debug.Log("Customer is leaving the restaurant.");
             // Move towards the exit point
             float step = moveSpeed * Time.deltaTime; // Calculate distance to move
             transform.position = Vector3.MoveTowards(transform.position, exitPoint.position, step);
@@ -52,7 +63,9 @@ public class Customer : MonoBehaviour, IInteractable
             // Check if reached the exit point
             if (Vector3.Distance(transform.position, exitPoint.position) < 0.001f)
             {
-                Destroy(gameObject); // Remove customer from the scene
+                this.assignedSeat.isOccupied = false; // Mark the seat as unoccupied
+                // Destroy(gameObject); // Remove customer from the scene
+                GameManager.Instance.CustomerServed(gameObject, this.hasFailed);
             }
         }
         else if(isMoving && targetSeat != null)
@@ -78,10 +91,11 @@ public class Customer : MonoBehaviour, IInteractable
 
     }
     
-    public void WalkToCounter(Transform counter)
+    public void WalkToCounter(CustomerSeat seat)
     {
-        this.targetSeat = counter;
+        this.targetSeat = seat.location;
         this.isMoving = true;
+        this.assignedSeat = seat;
     }
 
     public void Interact()
@@ -91,13 +105,27 @@ public class Customer : MonoBehaviour, IInteractable
 
         if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
-            // Implement logic for when the player is holding an ingredient
-            Debug.Log("Player is holding an ingredient.");
+            this.patienceBar?.SetActive(false);
+            this.orderBubble?.SetActive(false);
+            // Logic for when the player is holding an ingredient
             if(ingredient.TryGetComponent<Pizza>(out Pizza pizza))
             {
-                // Logic for serving pizza
-                Debug.Log("Serving pizza to customer.");
-                // CustomerManager.Instance.ServePizzaToCustomer(this, pizza);
+                // Serving pizza
+                bool result = (GetComponent<Order>()?.ComparePizzaToOrder(pizza)) ?? false;
+                playerHand.Remove();
+                if (result)
+                {
+                    this.hasFailed = false;
+                    if (this.animator != null)
+                    {
+                        this.animator.SetTrigger("Celebrate");
+                        WaitForSeconds wait = new WaitForSeconds(1f);
+                        StartCoroutine(WaitAndLeave(wait));
+
+                        return;
+                    }
+                }
+                playerHealth.TakeDamage(1);
             } else {
                 // TODO: Implement logic for other ingredients
                 playerHealth.TakeDamage(1);
@@ -107,6 +135,12 @@ public class Customer : MonoBehaviour, IInteractable
         } else {
                 playerHand.InvalidAction("You can't do this!", 2f);
         }
+    }
+
+    private IEnumerator WaitAndLeave(WaitForSeconds wait)
+    {
+        yield return wait;
+        Leave();
     }
 
     public string getInteractionText()
@@ -196,15 +230,16 @@ public class Customer : MonoBehaviour, IInteractable
 
         // Optional: trigger fail or leave logic
         playerHealth?.TakeDamage(1);
-        Destroy(gameObject); // or StartCoroutine(Leave())
+        Leave();
     }
 
     public void Leave()
     {
-        StopCoroutine(patienceCoroutine);
-        StartCoroutine(RotateTowardsExit());
         this.orderBubble?.SetActive(false);
         this.patienceBar?.SetActive(false);
+
+        StopCoroutine(patienceCoroutine);
+        StartCoroutine(RotateTowardsExit());
     }
 
     private IEnumerator RotateTowardsExit()
@@ -218,10 +253,9 @@ public class Customer : MonoBehaviour, IInteractable
             yield return null;
         }
         
-        transform.rotation = targetRotation; // Snap to final rotation
+        transform.rotation = targetRotation; // Snap to final rotation to exit door
+        // bool to exit the door
         isMoving = true;
         isServed = true;
-        Debug.Log("Customer is now moving towards the exit.");
     }
-
 }

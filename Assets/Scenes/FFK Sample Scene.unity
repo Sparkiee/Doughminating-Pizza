@@ -25584,8 +25584,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de859c1769ae14142a5ff212573c4cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 10
-  patienceTime: 45
+  currentLevel: 1
+  patienceTime: 90
   customersPerLevel: 2
   entryPoint: {fileID: 1299998681}
   exitPoint: {fileID: 1725019433}
@@ -25597,8 +25597,22 @@ MonoBehaviour:
   - location: {fileID: 1463935565}
     isOccupied: 0
   customerPrefabs:
+  - {fileID: 6644603938449114179, guid: aba2c8eebf9419e47a7fbe2adc3ef311, type: 3}
+  - {fileID: 4653247046118013287, guid: 0266670f4f1bd1445a9b1ec41686857e, type: 3}
+  - {fileID: 8346789638012683817, guid: 0c50b330236a4634b959432b1a30d0a5, type: 3}
   - {fileID: 3300799546944532708, guid: 1ed4ed7b85430234981fb2dd8062a68b, type: 3}
+  - {fileID: 5640941148175782696, guid: ed97b47b3e8101347a7a9208ceb82e0c, type: 3}
+  - {fileID: 4975976810483710590, guid: dc2e1b8a327872348bc00f0fc42cdb8c, type: 3}
+  - {fileID: 2618188073631541129, guid: 51c952abc5026b341976dff25312fa3b, type: 3}
+  - {fileID: 7881807149238628900, guid: 46e9fe888e5f8374d99697ab12e7e244, type: 3}
+  - {fileID: 1822160269786678409, guid: 6b8b6636167d7b747b06afc46ceea4fc, type: 3}
+  - {fileID: 7438494788967298231, guid: 7357abae50d46324d97b886cdfbc069c, type: 3}
   - {fileID: 1216435090000238643, guid: 5f186379083e1a64e9b7bf381827843c, type: 3}
+  - {fileID: 631475601059415042, guid: a4be2f1181cc919429b568962999b830, type: 3}
+  - {fileID: 3132827565773464112, guid: 391ef59a42b47674098a886408f5c718, type: 3}
+  - {fileID: 1075948391855331002, guid: fec56f72e90f8d34785ecb28627f69c6, type: 3}
+  - {fileID: 2744035215387846840, guid: 7c4e148bf59919e44b9acc3bce22ab0d, type: 3}
+  - {fileID: 840272330101625621, guid: e0d02d42c0cc92a49b6da5bc99fe7fa0, type: 3}
   orderBubblePrefab: {fileID: 6390752237371897202, guid: 0af8fda94721db7449c59f24e150f062,
     type: 3}
   patienceBarPrefab: {fileID: 5410653246318400917, guid: eeaff4f684161df4c818fa45c642b45f,
