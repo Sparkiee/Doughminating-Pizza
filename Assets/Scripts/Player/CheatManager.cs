@@ -16,6 +16,7 @@ public class CheatManager : MonoBehaviour
             GodMode,
             InstantPizza,
             NoBurn,
+            AlwaysApprove,
         }
         public cheatName name;
         public Toggle toggle;

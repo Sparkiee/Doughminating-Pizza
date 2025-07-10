@@ -108,6 +108,25 @@ public class Customer : MonoBehaviour, IInteractable
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
         TryGetComponent<AudioSource>(out AudioSource audioSource);
+        if(CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.AlwaysApprove))
+        {
+            Debug.Log("Cheat enabled: AlwaysApprove");
+            this.patienceBar?.SetActive(false);
+            this.orderBubble?.SetActive(false);
+            this.isServed = true;
+            if (this.animator != null)
+            {
+                this.animator.SetTrigger("Celebrate");
+                WaitForSeconds wait = new WaitForSeconds(1f);
+                StartCoroutine(WaitAndLeave(wait));
+            }
+            if (audioSource != null && successfulOrderSound != null)
+            {
+                audioSource.PlayOneShot(successfulOrderSound);
+            }
+            playerHand.Remove();
+            return;
+        }
 
         if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
