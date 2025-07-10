@@ -25825,7 +25825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de859c1769ae14142a5ff212573c4cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 3
+  currentLevel: 1
   patienceTime: 90
   customersPerLevel: 2
   entryPoint: {fileID: 1299998681}
