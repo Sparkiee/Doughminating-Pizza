@@ -11,6 +11,9 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private Vector3 movementTutorialStartPosition;
 
     private GameObject customer;
+    [SerializeField] private GameObject doughFreezer;
+    [SerializeField] private GameObject WorkCounter;
+    [SerializeField] private GameObject RollingPin;
 
 
     public void RunTutorial() {
@@ -23,7 +26,7 @@ public class TutorialManager : MonoBehaviour
             {
                 yield return new WaitForSeconds(1f);
                 tutorialMessage.ClearMessageBackwards(() => {
-                    tutorialMessage.ShowMessage("First, let's start with the basics.\nYou can move around using WASD or Arrow keys and the mouse.", () => {
+                    tutorialMessage.ShowMessage("First, let's start with the basics.\nYou can move around using WASD and the mouse.", () => {
                         StartCoroutine(WaitForMovement());
                     });
                 });
@@ -51,6 +54,11 @@ public class TutorialManager : MonoBehaviour
                             tutorialArrow.SetActive(true);
                             tutorialArrow.transform.position = this.customer.transform.position + new Vector3(0, 2, 0);
                             tutorialArrow.transform.SetParent(this.customer.transform, true);
+                            StartCoroutine(WaitForCustomerArrival());
+                            IEnumerator WaitForCustomerArrival()
+                            {
+                                yield return new WaitForSeconds(2f);
+                            }
                             tutorialMessage.ClearMessageBackwards(() => {
                                 tutorialMessage.ShowMessage("This is " + this.customer.name + "! Let's make him a pizza!", () => {
 
@@ -60,6 +68,9 @@ public class TutorialManager : MonoBehaviour
                                         tutorialMessage.ClearMessageBackwards(() => {
                                             tutorialMessage.ShowMessage("First, we need to grab some dough.", () => {
                                                 // set arrow above the dough freezer
+                                                tutorialArrow.SetActive(true);
+                                                tutorialArrow.transform.position = doughFreezer.transform.position + new Vector3(0, 2, 0);
+                                                tutorialArrow.transform.SetParent(doughFreezer.transform, true);
                                                 StartCoroutine(WaitForDough());
                                             });
                                         });
@@ -77,13 +88,21 @@ public class TutorialManager : MonoBehaviour
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         
-        GameObject held = playerHand.HeldItem;
-        Ingredient ingredient = held.GetComponent<Ingredient>();
-        while (!(ingredient is Dough))
+        while (true)
         {
+            GameObject held = playerHand.HeldItem;
+            if (held != null)
+            {
+                Ingredient ingredient = held.GetComponent<Ingredient>();
+                if (ingredient != null && ingredient is Dough)
+                {
+                    break; // Player is holding dough
+                }
+            }
+            // Wait until the player has picked up the dough
             yield return null; // Wait for the next frame
         }
-
+        tutorialArrow.SetActive(false); // Hide the arrow
         tutorialMessage.ClearMessageBackwards(() => {
             tutorialMessage.ShowMessage("Great! Now let's make a pizza with it.", () => {
                 StartCoroutine(WaitAndContinue3());
@@ -91,8 +110,68 @@ public class TutorialManager : MonoBehaviour
                 {
                     yield return new WaitForSeconds(1f);
                     tutorialMessage.ClearMessageBackwards(() => {
-                        tutorialMessage.ShowMessage("You can add ingredients to your pizza by clicking on them in the ingredient panel.", () => {
-                            // GameManager.Instance.ShowIngredientPanel();
+                        tutorialMessage.ShowMessage("First of all, place the dough on top of the counter", () => {
+                            tutorialArrow.SetActive(true);
+                            tutorialArrow.transform.position = WorkCounter.transform.position + new Vector3(0, 1, 0);
+                            tutorialArrow.transform.SetParent(WorkCounter.transform, true);
+                            StartCoroutine(WaitForDoughPlaced());
+                            IEnumerator WaitForDoughPlaced()
+                            {
+                                int initialChildCount = WorkCounter.transform.childCount;
+                                while (WorkCounter.transform.childCount <= initialChildCount)
+                                {
+                                    yield return null; // Wait for the next frame
+                                }
+                                tutorialArrow.SetActive(false);
+                                tutorialMessage.ClearMessageBackwards(() => {
+                                    tutorialMessage.ShowMessage("Nice! You've placed the dough on the counter.\n Now grab the Rolling Pin!", null);
+                                    tutorialArrow.SetActive(true);
+                                    tutorialArrow.transform.position = RollingPin.transform.position + new Vector3(0, 1, 0);
+                                    tutorialArrow.transform.SetParent(RollingPin.transform, true);
+                                    StartCoroutine(WaitForRollingPin());
+                                    IEnumerator WaitForRollingPin()
+                                    {
+                                        while (true)
+                                        {
+                                            GameObject held = playerHand.HeldItem;
+                                            if (held != null)
+                                            {
+                                                Tool item = held.TryGetComponent<Tool>(out Tool tool) ? tool : null;
+                                                if (item != null && item is RollingPin)
+                                                {
+                                                    break; // Player is holding the Rolling Pin
+                                                }
+                                            }
+                                            yield return null; // Wait for the next frame
+                                        }
+                                        tutorialArrow.SetActive(false);
+                                        tutorialMessage.ClearMessageBackwards(() => {
+                                            tutorialMessage.ShowMessage("Great! Now use the Rolling Pin to flatten the dough.", () => {
+                                                StartCoroutine(WaitToFlatten());
+                                                IEnumerator WaitToFlatten()
+                                                {
+                                                    while(true) {
+                                                        this.WorkCounter.transform.Find("Pizza").TryGetComponent<Pizza>(out Pizza pizza);
+                                                        if (pizza != null)
+                                                        {
+                                                            break; // Player has flattened the dough
+                                                        }
+                                                        yield return new WaitForSeconds(1f);
+                                                    }
+                                                    tutorialMessage.ClearMessageBackwards(() => {
+                                                        tutorialMessage.ShowMessage("Once you're done, it's time to make some sauce!", () => {
+                                                            // Set arrow above the work counter
+                                                            tutorialArrow.SetActive(true);
+                                                            tutorialArrow.transform.position = WorkCounter.transform.position + new Vector3(0, 1, 0);
+                                                            tutorialArrow.transform.SetParent(WorkCounter.transform, true);
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            }
                         });
                     });
                 }

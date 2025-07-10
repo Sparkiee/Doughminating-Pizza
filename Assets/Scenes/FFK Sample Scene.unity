@@ -11212,6 +11212,9 @@ MonoBehaviour:
   tutorialPanel: {fileID: 1200303019}
   gameManager: {fileID: 1043021692}
   movementTutorialStartPosition: {x: 0, y: 0, z: 0}
+  doughFreezer: {fileID: 1342515631}
+  WorkCounter: {fileID: 751187192}
+  RollingPin: {fileID: 1242750579}
 --- !u!4 &485724042
 Transform:
   m_ObjectHideFlags: 0
@@ -18415,6 +18418,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b4c7175919cf984c8bfa6006681c124, type: 3}
+--- !u!1 &751187192 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2451459228792200083, guid: fbb185aff55cf1d4c83ccd0afbd18c81,
+    type: 3}
+  m_PrefabInstance: {fileID: 854774725}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &752170023
 PrefabInstance:
   m_ObjectHideFlags: 0

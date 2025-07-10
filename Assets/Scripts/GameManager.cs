@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Exit point is not assigned!");
             return null;
         }
-        int randomIndex = Random.Range(0, customerPrefabs.Length);
+        int randomIndex = 13; // For tutorial purposes, always spawn the 13th customer prefab
         string customerName = "Joe Mama";
         GameObject customer = Instantiate(customerPrefabs[randomIndex], new Vector3(entryPoint.position.x, entryPoint.position.y + 0.9f, entryPoint.position.z), Quaternion.identity);
         customer.name = customerName;
