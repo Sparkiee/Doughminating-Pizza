@@ -126,26 +126,26 @@ public class Customer : MonoBehaviour, IInteractable
                         this.animator.SetTrigger("Celebrate");
                         WaitForSeconds wait = new WaitForSeconds(1f);
                         StartCoroutine(WaitAndLeave(wait));
-                        if (audioSource != null && successfulOrderSound != null)
-                        {
-                            audioSource.PlayOneShot(successfulOrderSound);
-                        }
-                        return;
                     }
+                    if (audioSource != null && successfulOrderSound != null)
+                    {
+                        audioSource.PlayOneShot(successfulOrderSound);
+                    }
+                    return;
                 }
                 playerHealth.TakeDamage(1);
             } else {
                 // TODO: Implement logic for other ingredients
                 playerHealth.TakeDamage(1);
             }
+            if(audioSource != null && failedOrderSound != null)
+            {
+                audioSource.PlayOneShot(failedOrderSound);
+            }
             playerHand.Remove();
             Leave();
         } else {
                 playerHand.InvalidAction("You can't do this!", 2f);
-        }
-        if(audioSource != null && failedOrderSound != null)
-        {
-            audioSource.PlayOneShot(failedOrderSound);
         }
     }
 
