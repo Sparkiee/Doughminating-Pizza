@@ -13009,7 +13009,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -25856,7 +25856,7 @@ MonoBehaviour:
   - {fileID: 840272330101625621, guid: e0d02d42c0cc92a49b6da5bc99fe7fa0, type: 3}
   orderBubblePrefab: {fileID: 6390752237371897202, guid: 0af8fda94721db7449c59f24e150f062,
     type: 3}
-  patienceBarPrefab: {fileID: 5410653246318400917, guid: eeaff4f684161df4c818fa45c642b45f,
+  patienceBarPrefab: {fileID: 5346141760562133934, guid: 95842578d01db6e41b687bfa0168f73a,
     type: 3}
   totalCustomers: 0
   servedCustomers: 0

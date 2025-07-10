@@ -14,14 +14,10 @@ public class Customer : MonoBehaviour, IInteractable
 
     private GameObject orderBubble;
     private GameObject patienceBar;
-    private GameObject patienceBarFill;
 
     private float patience;
     private float currentPatience;
     private CustomerSeat assignedSeat;
-
-    private float barInitialScaleX;
-    private Vector3 barInitialPos;
 
     private Coroutine patienceCoroutine;
 
@@ -88,6 +84,7 @@ public class Customer : MonoBehaviour, IInteractable
         }
 
         this.orderBubble?.transform.LookAt(playerCamera.transform.position);
+        this.patienceBar?.transform.LookAt(playerCamera.transform.position);
     }
 
     void Awake()
@@ -212,13 +209,10 @@ public class Customer : MonoBehaviour, IInteractable
             return;
         }
         this.patienceBar = patienceBar;
-        this.patienceBarFill = patienceBar.transform.Find("PatienceBarFG").gameObject;
+        // this.patienceBarFill = patienceBar.transform.Find("PatienceBarFG").gameObject;
         patienceBar.SetActive(false);
         this.patience = patience;
         this.currentPatience = patience;
-
-        this.barInitialScaleX = patienceBar.transform.localScale.x;
-        this.barInitialPos = patienceBar.transform.localPosition;
     }
 
     public void SetExitPoint(Transform exitPoint)
@@ -246,24 +240,7 @@ public class Customer : MonoBehaviour, IInteractable
             currentPatience = Mathf.Max(0, patience - elapsedTime);
             float ratio = Mathf.Clamp01(currentPatience / patience);
 
-            if (patienceBar != null)
-            {
-                // Scale and shift the bar to simulate depletion from left to right
-                float newScaleX = barInitialScaleX * ratio;
-
-                patienceBar.transform.localScale = new Vector3(
-                    newScaleX,
-                    patienceBar.transform.localScale.y,
-                    patienceBar.transform.localScale.z
-                );
-
-                float delta = (newScaleX - barInitialScaleX) * 0.5f;
-                patienceBar.transform.localPosition = new Vector3(
-                    barInitialPos.x - delta,
-                    barInitialPos.y,
-                    barInitialPos.z
-                );
-            }
+            patienceBar.GetComponent<MoodController>()?.setPatience(ratio);
 
             elapsedTime += Time.deltaTime;
             yield return null;

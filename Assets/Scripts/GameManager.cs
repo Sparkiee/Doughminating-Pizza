@@ -110,13 +110,13 @@ public class GameManager : MonoBehaviour
 
         }
         if (patienceBarPrefab != null) {
-            Vector3 patienceBarPosition = customer.transform.position + new Vector3(0, 2.0f, 0); // Adjust Y offset as needed
+            Vector3 patienceBarPosition = customer.transform.position + new Vector3(0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             GameObject patienceBar = Instantiate(patienceBarPrefab, patienceBarPosition, Quaternion.identity, customer.transform);
             customer.GetComponent<Customer>().SetPatience(patienceTime, patienceBar);
         }
 
         if (orderBubblePrefab != null) {
-            Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0); // Adjust Y offset as needed
+            Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             GameObject orderBubble = Instantiate(orderBubblePrefab, orderBubblePosition, Quaternion.identity, customer.transform);
             customer.GetComponent<Customer>().AddOrderBubble(orderBubble);
             Order order = customer.AddComponent<Order>();
