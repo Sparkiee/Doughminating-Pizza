@@ -100,6 +100,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if(isMoving || isServed) return;
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
 
