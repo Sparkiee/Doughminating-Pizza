@@ -57,7 +57,7 @@ public class Customer : MonoBehaviour, IInteractable
         if(isMoving && isLeaving)
         {
             // Move towards the exit point
-            float step = moveSpeed * Time.deltaTime; // Calculate distance to move
+            float step = 2 * moveSpeed * Time.deltaTime; // Calculate distance to move
             transform.position = Vector3.MoveTowards(transform.position, exitPoint.position, step);
 
             // Check if reached the exit point
@@ -111,6 +111,7 @@ public class Customer : MonoBehaviour, IInteractable
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             this.isServed = true;
+            this.hasFailed = false;
             if (this.animator != null)
             {
                 this.animator.SetTrigger("Celebrate");
