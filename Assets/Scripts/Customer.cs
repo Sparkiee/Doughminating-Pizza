@@ -30,6 +30,9 @@ public class Customer : MonoBehaviour, IInteractable
 
     private Camera playerCamera;
 
+    private AudioClip successfulOrderSound;
+    private AudioClip failedOrderSound;
+
     private Animator animator;
     
     void Start()
@@ -103,6 +106,7 @@ public class Customer : MonoBehaviour, IInteractable
         if(isMoving || isServed) return;
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
+        TryGetComponent<AudioSource>(out AudioSource audioSource);
 
         if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
@@ -122,7 +126,10 @@ public class Customer : MonoBehaviour, IInteractable
                         this.animator.SetTrigger("Celebrate");
                         WaitForSeconds wait = new WaitForSeconds(1f);
                         StartCoroutine(WaitAndLeave(wait));
-
+                        if (audioSource != null && successfulOrderSound != null)
+                        {
+                            audioSource.PlayOneShot(successfulOrderSound);
+                        }
                         return;
                     }
                 }
@@ -135,6 +142,10 @@ public class Customer : MonoBehaviour, IInteractable
             Leave();
         } else {
                 playerHand.InvalidAction("You can't do this!", 2f);
+        }
+        if(audioSource != null && failedOrderSound != null)
+        {
+            audioSource.PlayOneShot(failedOrderSound);
         }
     }
 
@@ -193,6 +204,16 @@ public class Customer : MonoBehaviour, IInteractable
     {
         this.exitPoint = exitPoint;
         Debug.Log($"Exit point set to: {exitPoint.position}");
+    }
+
+    public void SetSuccessfulOrderSound(AudioClip sound)
+    {
+        this.successfulOrderSound = sound;
+    }
+
+    public void SetFailedOrderSound(AudioClip sound)
+    {
+        this.failedOrderSound = sound;
     }
 
     private IEnumerator PatienceCountdown()

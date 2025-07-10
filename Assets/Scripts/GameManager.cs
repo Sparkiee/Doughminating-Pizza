@@ -25,9 +25,9 @@ public class GameManager : MonoBehaviour
     [Header("Game Locations")]
     [SerializeField] private Transform entryPoint;
     [SerializeField] private Transform exitPoint;
+
     // Dictionary to track customer locations and their served status
     // Key: Transform (location), Value: bool (isCustomerHere)
-
     [SerializeField] private List<CustomerSeat> customerSeats = new List<CustomerSeat>();
 
     [Header("Customer Prefabs")]
@@ -39,8 +39,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int totalCustomers = 0;
     [SerializeField] private int servedCustomers = 0;
     [SerializeField] private int failedCustomers = 0;
-
     [SerializeField] private List<GameObject> activeCustomers = new List<GameObject>();
+
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip successfulOrderSound;
+    [SerializeField] private AudioClip failedOrderSound;
 
     [Header("UI Elements")]
     [SerializeField] TextMeshProUGUI levelText;
@@ -125,6 +128,8 @@ public class GameManager : MonoBehaviour
 
         customer.GetComponent<Customer>().WalkToCounter(GetAvailableSeat());
         customer.GetComponent<Customer>().SetExitPoint(exitPoint.transform);
+        customer.GetComponent<Customer>().SetSuccessfulOrderSound(successfulOrderSound);
+        customer.GetComponent<Customer>().SetFailedOrderSound(failedOrderSound);
     }
 
     public void CustomerServed(GameObject customer, bool hasFailed) {

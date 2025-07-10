@@ -25621,6 +25621,9 @@ MonoBehaviour:
   servedCustomers: 0
   failedCustomers: 0
   activeCustomers: []
+  successfulOrderSound: {fileID: 8300000, guid: c2c41b78f237aac4883b9f9de3c1debf,
+    type: 3}
+  failedOrderSound: {fileID: 8300000, guid: 1466f345dd0b8f0419f2518a93e7c260, type: 3}
   levelText: {fileID: 1185341403}
 --- !u!4 &1043021693
 Transform:
