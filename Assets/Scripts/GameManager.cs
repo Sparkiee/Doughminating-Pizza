@@ -47,12 +47,16 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] TextMeshProUGUI levelText;
+    [SerializeField] GameObject TutorialPanel;
 
     void Start()
     {
         if (Instance == null)
         {
             Instance = this;
+            // TutorialPanel.SetActive(true);
+            // Cursor.lockState = CursorLockMode.None;
+            // Cursor.visible = true;
             StartGame();
         }
         else
@@ -61,7 +65,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void StartGame() {
+    public void StartGame() {
+        if(TutorialPanel.activeSelf) {
+            TutorialPanel.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         if(this.gameStarted) return;
         this.gameStarted = true;
         this.levelText.text = currentLevel.ToString();
@@ -95,6 +105,51 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
+
+    public GameObject SpawnTutorialCustomer() {
+        if (customerPrefabs.Length == 0) {
+            Debug.LogError("No customer prefabs assigned!");
+            return null;
+        }
+        if (entryPoint == null) {
+            Debug.LogError("Entry point is not assigned!");
+            return null;
+        }
+        if (exitPoint == null) {
+            Debug.LogError("Exit point is not assigned!");
+            return null;
+        }
+        int randomIndex = Random.Range(0, customerPrefabs.Length);
+        string customerName = "Joe Mama";
+        GameObject customer = Instantiate(customerPrefabs[randomIndex], new Vector3(entryPoint.position.x, entryPoint.position.y + 0.9f, entryPoint.position.z), Quaternion.identity);
+        customer.name = customerName;
+        // Dynamically add a script/component to the customer if needed
+        if (customer.GetComponent<Customer>() == null)
+        {
+            customer.AddComponent<Customer>();
+        }
+        if (patienceBarPrefab != null) {
+            Vector3 patienceBarPosition = customer.transform.position + new Vector3(0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
+            // GameObject patienceBar = Instantiate(patienceBarPrefab, patienceBarPosition, Quaternion.identity, customer.transform);
+            // customer.GetComponent<Customer>().SetPatience(patienceTime, patienceBar);
+        }
+        if (orderBubblePrefab != null) {
+            Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
+            GameObject orderBubble = Instantiate(orderBubblePrefab, orderBubblePosition, Quaternion.identity, customer.transform);
+            customer.GetComponent<Customer>().AddOrderBubble(orderBubble);
+            Order order = customer.AddComponent<Order>();
+            order.InitializeOrderBubble(orderBubble);
+            order.CreateTutorialOrder();
+
+        }
+        customer.GetComponent<Customer>().WalkToCounter(GetAvailableSeat());
+        customer.GetComponent<Customer>().SetExitPoint(exitPoint.transform);
+        customer.GetComponent<Customer>().SetSuccessfulOrderSound(successfulOrderSound);
+        customer.GetComponent<Customer>().SetFailedOrderSound(failedOrderSound);
+
+        return customer;
+
+    }
     private void SpawnCustomer() {
         // Logic to spawn a customer
         int randomIndex = Random.Range(0, customerPrefabs.Length);

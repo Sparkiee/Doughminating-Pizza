@@ -117,4 +117,18 @@ public class Order : MonoBehaviour
         Debug.Log("[ORDER] Pizza matches the order!");
         return true;
     }
+
+    public void CreateTutorialOrder() {
+        ingredients.Clear();
+        if (bubbleIcons != null)
+        {
+            foreach (Transform child in bubbleIcons.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        AddIngredient(IngredientType.Cheese);
+        AddIngredient(IngredientType.Sauce);
+        AddIngredient(IngredientType.Pineapple);
+    }
 }

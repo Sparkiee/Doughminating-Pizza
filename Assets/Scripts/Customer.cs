@@ -182,15 +182,17 @@ public class Customer : MonoBehaviour, IInteractable
     private void OnArriveAtSeat()
     {
         // Logic for when the customer arrives at the seat
-        Debug.Log("Customer has arrived at the seat.");
         isMoving = false;
         this.orderBubble?.SetActive(true);
-        this.patienceBar?.SetActive(true);
         if(patienceCoroutine != null)
         {
             StopCoroutine(patienceCoroutine);
         }
-        patienceCoroutine = StartCoroutine(PatienceCountdown());
+        if(this.patienceBar != null)
+        {
+            this.patienceBar?.SetActive(true);
+            patienceCoroutine = StartCoroutine(PatienceCountdown());
+        }
     }
 
     public void AddOrderBubble(GameObject bubble)
