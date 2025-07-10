@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 [System.Serializable]
@@ -161,5 +162,10 @@ public class GameManager : MonoBehaviour
         availableSeats[randomIndex].isOccupied = true;
         // To get the global position, use:
         return availableSeats[randomIndex];
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f; // Reset time scale
     }
 }
