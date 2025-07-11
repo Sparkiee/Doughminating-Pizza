@@ -17,7 +17,7 @@ public class Oven : MonoBehaviour, IInteractable
 
     private GameObject currentPizza;
     private float cookTimer;
-    private bool isCooking;
+    public bool isCooking;
     private CookState currentState = CookState.Raw;
     [SerializeField] private ParticleSystem smokeEffect;
     private AudioSource ovenTimerAudioSource;

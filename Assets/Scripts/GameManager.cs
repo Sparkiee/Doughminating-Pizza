@@ -54,10 +54,10 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // TutorialPanel.SetActive(true);
-            // Cursor.lockState = CursorLockMode.None;
-            // Cursor.visible = true;
-            StartGame();
+            TutorialPanel.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            // StartGame();
         }
         else
         {
@@ -146,6 +146,7 @@ public class GameManager : MonoBehaviour
         customer.GetComponent<Customer>().SetExitPoint(exitPoint.transform);
         customer.GetComponent<Customer>().SetSuccessfulOrderSound(successfulOrderSound);
         customer.GetComponent<Customer>().SetFailedOrderSound(failedOrderSound);
+        customer.GetComponent<Customer>().SetTutorialCustomer();
 
         return customer;
 

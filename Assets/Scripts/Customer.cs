@@ -31,6 +31,8 @@ public class Customer : MonoBehaviour, IInteractable
     private AudioClip failedOrderSound;
 
     private Animator animator;
+
+    private bool isTutorialCustomer = false;
     
     void Start()
     {
@@ -87,6 +89,11 @@ public class Customer : MonoBehaviour, IInteractable
         this.patienceBar?.transform.LookAt(playerCamera.transform.position);
     }
 
+
+    public void SetTutorialCustomer()
+    {
+        this.isTutorialCustomer = true;
+    }
     void Awake()
     {
 
@@ -149,6 +156,10 @@ public class Customer : MonoBehaviour, IInteractable
                     if (audioSource != null && successfulOrderSound != null)
                     {
                         audioSource.PlayOneShot(successfulOrderSound);
+                    }
+                    if(isTutorialCustomer)
+                    {
+                        TutorialManager.Instance.EndTutorial();
                     }
                     return;
                 }
@@ -259,9 +270,12 @@ public class Customer : MonoBehaviour, IInteractable
     public void Leave()
     {
         this.orderBubble?.SetActive(false);
-        this.patienceBar?.SetActive(false);
+        if(this.patienceBar != null)
+        {
+            this.patienceBar.SetActive(false);
+            StopCoroutine(patienceCoroutine);
+        }
 
-        StopCoroutine(patienceCoroutine);
         StartCoroutine(RotateTowardsExit());
     }
 

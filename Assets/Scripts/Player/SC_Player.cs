@@ -17,6 +17,10 @@ public class SC_Player : MonoBehaviour
     public GameObject finishMenuUI;
     private bool isGameOver = false;
 
+    [Header("Tutorial")]
+    public GameObject tutorialMessage;
+    public bool isTutorialActive = false;
+
     [Header("Player Settings")]
     public float moveSpeed = 5f;
     public float lookSensitivity = 2f;
@@ -54,9 +58,12 @@ public class SC_Player : MonoBehaviour
         _actions.Player.Pause.performed += _ => TogglePauseMenu();
         // _actions.Player.Pause.canceled += _ => TogglePauseMenu();
         
+        _actions.Player.Look.Disable(); // Disable look input initially
         // Enable actions after setup
         _actions.Enable();
     }
+
+
 
     void OnEnable() 
     {
@@ -283,6 +290,8 @@ public class SC_Player : MonoBehaviour
             Cursor.visible = true;
             _actions.Player.Look.Disable(); // Freeze mouse movement
             toastPanel?.SetActive(false); // Hide toast panel if it exists
+            if(isTutorialActive)
+                tutorialMessage.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
         }
         else
         {
@@ -291,6 +300,9 @@ public class SC_Player : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             _actions.Player.Look.Enable();
+            if(isTutorialActive)
+                tutorialMessage.GetComponentInChildren<TextMeshProUGUI>().enabled = true;
+
         }
     }
 
@@ -309,5 +321,10 @@ public class SC_Player : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * (interactionDistance * 1.5f));
         }
+    }
+
+    public void ToggleTutorial(bool isActive)
+    {
+        this.isTutorialActive = isActive;
     }
 }

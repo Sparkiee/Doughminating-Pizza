@@ -7,6 +7,7 @@ public class TutorialMessage : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI messageText;
     [SerializeField] private float typingSpeed;
+    [SerializeField] private float clearSpeed;
 
     private Coroutine typingCoroutine;
 
@@ -30,7 +31,7 @@ public class TutorialMessage : MonoBehaviour
         foreach (char letter in message.ToCharArray())
         {
             messageText.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
+            yield return new WaitForSecondsRealtime(typingSpeed);
         }
 
         onComplete?.Invoke();
@@ -51,9 +52,12 @@ public class TutorialMessage : MonoBehaviour
         for (int i = currentText.Length - 1; i >= 0; i--)
         {
             messageText.text = currentText.Substring(0, i);
-            yield return new WaitForSeconds(typingSpeed / 2);
+            yield return new WaitForSecondsRealtime(clearSpeed);
         }
-
+        if(this.gameObject.activeSelf)
+        {
+            this.gameObject.SetActive(false);
+        }
         onComplete?.Invoke();
     }
 }

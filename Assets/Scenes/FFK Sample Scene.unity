@@ -11097,6 +11097,7 @@ MonoBehaviour:
   pizzaPlacementPosition: {x: -0.527, y: 1.633, z: 20.71}
   cookDuration: 5
   burnDuration: 10
+  isCooking: 0
   smokeEffect: {fileID: 0}
 --- !u!4 &485091758 stripped
 Transform:
@@ -11188,13 +11189,14 @@ GameObject:
   m_Component:
   - component: {fileID: 485724042}
   - component: {fileID: 485724041}
+  - component: {fileID: 485724043}
   m_Layer: 0
   m_Name: TutorialManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &485724041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11215,6 +11217,13 @@ MonoBehaviour:
   doughFreezer: {fileID: 1342515631}
   WorkCounter: {fileID: 751187192}
   RollingPin: {fileID: 1242750579}
+  tomatoBox: {fileID: 1470252229}
+  cheeseBox: {fileID: 1642369843}
+  pineappleBox: {fileID: 1222233957}
+  ovenPosition: {fileID: 1528566604}
+  oven: {fileID: 1299088410}
+  blender: {fileID: 1438855670}
+  blenderOutput: {fileID: 1344259015}
 --- !u!4 &485724042
 Transform:
   m_ObjectHideFlags: 0
@@ -11230,6 +11239,102 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &485724043
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485724040}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 756f9138ec7614742bd43d1be57dbee4, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &486629645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12725,7 +12830,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageText: {fileID: 1832009476}
-  typingSpeed: 0.05
+  typingSpeed: 0.04
+  clearSpeed: 0.005
 --- !u!114 &532805896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13320,6 +13426,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1904917362}
   finishMenuUI: {fileID: 1749283710}
+  tutorialMessage: {fileID: 532805894}
+  isTutorialActive: 0
   moveSpeed: 5
   lookSensitivity: 0.1
   playerCamera: {fileID: 980321180}
@@ -33024,6 +33132,7 @@ MonoBehaviour:
   pizzaPlacementPosition: {x: -0.59, y: 1.633, z: 20.3}
   cookDuration: 5
   burnDuration: 10
+  isCooking: 0
   smokeEffect: {fileID: 1864912046}
 --- !u!65 &1299088416
 BoxCollider:
