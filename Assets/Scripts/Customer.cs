@@ -9,7 +9,6 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private float moveSpeed = 2.0f;
     [SerializeField] private bool isMoving = false;
     private bool isLeaving = false;
-    private bool isServed = false;
     private bool hasFailed = true;
 
     private GameObject orderBubble;
@@ -33,7 +32,8 @@ public class Customer : MonoBehaviour, IInteractable
     private Animator animator;
 
     private bool isTutorialCustomer = false;
-    
+    public bool isServed = false;
+
     void Start()
     {
         this.animator = transform.Find("BaseCharacter")?.GetComponent<Animator>();
@@ -41,7 +41,8 @@ public class Customer : MonoBehaviour, IInteractable
         {
             Debug.LogError("Animator component not found on BaseCharacter!");
         }
-        else {
+        else
+        {
             Debug.Log("Animator component found on BaseCharacter.");
         }
         this.playerHealth = FindObjectOfType<Health>();
@@ -56,7 +57,7 @@ public class Customer : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        if(isMoving && isLeaving)
+        if (isMoving && isLeaving)
         {
             // Move towards the exit point
             float step = 2 * moveSpeed * Time.deltaTime; // Calculate distance to move
@@ -70,7 +71,7 @@ public class Customer : MonoBehaviour, IInteractable
                 GameManager.Instance.CustomerServed(gameObject, this.hasFailed);
             }
         }
-        else if(isMoving && targetSeat != null)
+        else if (isMoving && targetSeat != null)
         {
             // Move towards the target seat
             float step = moveSpeed * Time.deltaTime; // Calculate distance to move
@@ -79,11 +80,14 @@ public class Customer : MonoBehaviour, IInteractable
             // Check if reached the target seat
             if (Vector3.Distance(transform.position, targetSeat.position) < 0.001f)
             {
-                if(!isLeaving) {
+                if (!isLeaving)
+                {
                     OnArriveAtSeat();
                 }
             }
-        } else if(!isMoving && !isLeaving && !isServed) {
+        }
+        else if (!isMoving && !isLeaving && !isServed)
+        {
             // If not moving, look at the player camera
             if (playerCamera != null)
             {
@@ -104,7 +108,7 @@ public class Customer : MonoBehaviour, IInteractable
     {
 
     }
-    
+
     public void WalkToCounter(CustomerSeat seat)
     {
         this.targetSeat = seat.location;
@@ -115,12 +119,13 @@ public class Customer : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if(isMoving || isLeaving || isServed) return;
+        if (isMoving || isLeaving || isServed) return;
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
         TryGetComponent<AudioSource>(out AudioSource audioSource);
-        if(CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.AlwaysApprove))
-        {;
+        if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.AlwaysApprove))
+        {
+            ;
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             this.isServed = true;
@@ -139,25 +144,26 @@ public class Customer : MonoBehaviour, IInteractable
             return;
         }
 
-        if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
+        if (playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
             this.isServed = true;
-            
-            if(isTutorialCustomer)
+
+            if (isTutorialCustomer)
             {
-                if(ingredient.TryGetComponent<Pizza>(out Pizza tutorialPizza))
+                if (ingredient.TryGetComponent<Pizza>(out Pizza tutorialPizza))
                 {
-                    if(tutorialPizza.GetCookLevel() != CookState.Cooked && !tutorialPizza.HasSauce && !tutorialPizza.HasCheese && !tutorialPizza.HasPineapple)
+                    if (tutorialPizza.GetCookLevel() != CookState.Cooked && !tutorialPizza.HasSauce && !tutorialPizza.HasCheese && !tutorialPizza.HasPineapple)
                     {
                         playerHand.InvalidAction("You need to cook the pizza and add sauce and cheese!", 2f);
                         return;
                     }
-                } else return; // Only pizzas are allowed for tutorial customers
+                }
+                else return; // Only pizzas are allowed for tutorial customers
             }
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             // Logic for when the player is holding an ingredient
-            if(ingredient.TryGetComponent<Pizza>(out Pizza pizza))
+            if (ingredient.TryGetComponent<Pizza>(out Pizza pizza))
             {
                 // Serving pizza
                 bool result = (GetComponent<Order>()?.ComparePizzaToOrder(pizza)) ?? false;
@@ -175,25 +181,29 @@ public class Customer : MonoBehaviour, IInteractable
                     {
                         audioSource.PlayOneShot(successfulOrderSound);
                     }
-                    if(isTutorialCustomer)
+                    if (isTutorialCustomer)
                     {
                         TutorialManager.Instance.EndTutorial();
                     }
                     return;
                 }
                 playerHealth.TakeDamage(1);
-            } else {
+            }
+            else
+            {
                 // TODO: Implement logic for other ingredients
                 playerHealth.TakeDamage(1);
             }
-            if(audioSource != null && failedOrderSound != null)
+            if (audioSource != null && failedOrderSound != null)
             {
                 audioSource.PlayOneShot(failedOrderSound);
             }
             playerHand.Remove();
             Leave();
-        } else {
-                playerHand.InvalidAction("You can't do this!", 2f);
+        }
+        else
+        {
+            playerHand.InvalidAction("You can't do this!", 2f);
         }
     }
 
@@ -213,11 +223,11 @@ public class Customer : MonoBehaviour, IInteractable
         // Logic for when the customer arrives at the seat
         isMoving = false;
         this.orderBubble?.SetActive(true);
-        if(patienceCoroutine != null)
+        if (patienceCoroutine != null)
         {
             StopCoroutine(patienceCoroutine);
         }
-        if(this.patienceBar != null)
+        if (this.patienceBar != null)
         {
             this.patienceBar?.SetActive(true);
             patienceCoroutine = StartCoroutine(PatienceCountdown());
@@ -245,6 +255,11 @@ public class Customer : MonoBehaviour, IInteractable
         patienceBar.SetActive(false);
         this.patience = patience;
         this.currentPatience = patience;
+    }
+
+    public float GetPatience()
+    {
+        return this.currentPatience;
     }
 
     public void SetExitPoint(Transform exitPoint)
@@ -288,7 +303,7 @@ public class Customer : MonoBehaviour, IInteractable
     public void Leave()
     {
         this.orderBubble?.SetActive(false);
-        if(this.patienceBar != null)
+        if (this.patienceBar != null)
         {
             this.patienceBar.SetActive(false);
             StopCoroutine(patienceCoroutine);
@@ -301,16 +316,25 @@ public class Customer : MonoBehaviour, IInteractable
     {
         Vector3 direction = (exitPoint.position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        
+
         while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
             yield return null;
         }
-        
+
         transform.rotation = targetRotation; // Snap to final rotation to exit door
         // bool to exit the door
         isMoving = true;
         isLeaving = true;
     }
+
+
+    public string getName()
+    {
+        return this.name;
+    }
+
+
 }
+

@@ -70,8 +70,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartGame() {
-        if(TutorialPanel != null && TutorialPanel.activeSelf) {
+    public void StartGame()
+    {
+        if (TutorialPanel != null && TutorialPanel.activeSelf)
+        {
             TutorialPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -82,17 +84,20 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(this.gameStarted) return;
+        if (this.gameStarted) return;
         this.gameStarted = true;
         this.levelText.text = currentLevel.ToString();
         StartCoroutine(GameLoop());
     }
 
-    private IEnumerator GameLoop() {
-        while (this.gameStarted) {
+    private IEnumerator GameLoop()
+    {
+        while (this.gameStarted)
+        {
             // Define how many customers to spawn based on the current level
             int simultaneousCustomers;
-            switch (currentLevel) {
+            switch (currentLevel)
+            {
                 case <= 2:
                     simultaneousCustomers = 1;
                     break;
@@ -104,9 +109,11 @@ public class GameManager : MonoBehaviour
                     break;
             }
             int currentCustomers = activeCustomers.Count;
-            if (currentCustomers < simultaneousCustomers) {
+            if (currentCustomers < simultaneousCustomers)
+            {
                 int customersToSpawn = simultaneousCustomers - currentCustomers;
-                for (int i = 0; i < customersToSpawn; i++) {
+                for (int i = 0; i < customersToSpawn; i++)
+                {
                     SpawnCustomer();
                 }
             }
@@ -116,16 +123,20 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public GameObject SpawnTutorialCustomer() {
-        if (customerPrefabs.Length == 0) {
+    public GameObject SpawnTutorialCustomer()
+    {
+        if (customerPrefabs.Length == 0)
+        {
             Debug.LogError("No customer prefabs assigned!");
             return null;
         }
-        if (entryPoint == null) {
+        if (entryPoint == null)
+        {
             Debug.LogError("Entry point is not assigned!");
             return null;
         }
-        if (exitPoint == null) {
+        if (exitPoint == null)
+        {
             Debug.LogError("Exit point is not assigned!");
             return null;
         }
@@ -138,12 +149,14 @@ public class GameManager : MonoBehaviour
         {
             customer.AddComponent<Customer>();
         }
-        if (patienceBarPrefab != null) {
+        if (patienceBarPrefab != null)
+        {
             Vector3 patienceBarPosition = customer.transform.position + new Vector3(0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             // GameObject patienceBar = Instantiate(patienceBarPrefab, patienceBarPosition, Quaternion.identity, customer.transform);
             // customer.GetComponent<Customer>().SetPatience(patienceTime, patienceBar);
         }
-        if (orderBubblePrefab != null) {
+        if (orderBubblePrefab != null)
+        {
             Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             GameObject orderBubble = Instantiate(orderBubblePrefab, orderBubblePosition, Quaternion.identity, customer.transform);
             customer.GetComponent<Customer>().AddOrderBubble(orderBubble);
@@ -161,7 +174,8 @@ public class GameManager : MonoBehaviour
         return customer;
 
     }
-    private void SpawnCustomer() {
+    private void SpawnCustomer()
+    {
         // Logic to spawn a customer
         int randomIndex = Random.Range(0, customerPrefabs.Length);
         string customerName = GenerateRandomName();
@@ -175,13 +189,15 @@ public class GameManager : MonoBehaviour
             customer.AddComponent<Customer>();
 
         }
-        if (patienceBarPrefab != null) {
+        if (patienceBarPrefab != null)
+        {
             Vector3 patienceBarPosition = customer.transform.position + new Vector3(0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             GameObject patienceBar = Instantiate(patienceBarPrefab, patienceBarPosition, Quaternion.identity, customer.transform);
             customer.GetComponent<Customer>().SetPatience(patienceTime, patienceBar);
         }
 
-        if (orderBubblePrefab != null) {
+        if (orderBubblePrefab != null)
+        {
             Vector3 orderBubblePosition = customer.transform.position + new Vector3(-0.5f, 1.5f, 0.5f); // Adjust Y offset as needed
             GameObject orderBubble = Instantiate(orderBubblePrefab, orderBubblePosition, Quaternion.identity, customer.transform);
             customer.GetComponent<Customer>().AddOrderBubble(orderBubble);
@@ -198,31 +214,38 @@ public class GameManager : MonoBehaviour
         customer.GetComponent<Customer>().SetFailedOrderSound(failedOrderSound);
     }
 
-    public void CustomerServed(GameObject customer, bool hasFailed) {
+    public void CustomerServed(GameObject customer, bool hasFailed)
+    {
         if (customer == null) return;
         this.servedCustomers++;
-        if (hasFailed) {
+        if (hasFailed)
+        {
             this.failedCustomers++;
             this.patienceTime -= 5;
         }
         this.activeCustomers.Remove(customer);
-        if(servedCustomers - failedCustomers >= customersPerLevel * currentLevel) {
+        if (servedCustomers - failedCustomers >= customersPerLevel * currentLevel)
+        {
             currentLevel++;
             levelText.text = currentLevel.ToString();
         }
         Destroy(customer);
     }
 
-    private string GenerateRandomName() {
+    private string GenerateRandomName()
+    {
         string[] names = { "Aaron", "Adam", "Alice", "Bob", "Charlie", "Diana", "Evyevy", "Ethan", "Fiona", "Gandalf", "Gordon", "Hannah", "Hobbit", "Ivy", "Jack", "Joe", "Joseph", "Kira", "Liam", "Max", "Mia", "Nora", "Oscar", "Penny", "Quinn", "Riley", "Sam", "Shrek" };
         return names[Random.Range(0, names.Length)];
     }
 
-    private CustomerSeat GetAvailableSeat() {
+    private CustomerSeat GetAvailableSeat()
+    {
         // Collect all available seats
         List<CustomerSeat> availableSeats = new List<CustomerSeat>();
-        foreach (CustomerSeat seat in customerSeats) {
-            if (!seat.isOccupied) {
+        foreach (CustomerSeat seat in customerSeats)
+        {
+            if (!seat.isOccupied)
+            {
                 availableSeats.Add(seat);
             }
         }
@@ -234,8 +257,21 @@ public class GameManager : MonoBehaviour
         return availableSeats[randomIndex];
     }
 
-    public void RestartGame() {
+    public void RestartGame()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1f; // Reset time scale
+    }
+    
+    public void GetActiveCustomers(List<GameObject> customers)
+    {
+        customers.Clear();
+        foreach (GameObject customer in activeCustomers)
+        {
+            if (customer != null)
+            {
+                customers.Add(customer);
+            }
+        }
     }
 }

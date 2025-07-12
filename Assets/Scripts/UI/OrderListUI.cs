@@ -37,7 +37,7 @@ public class OrderListUI : MonoBehaviour
     private readonly UITheme theme = new UITheme(1);
 
     // Dictionary to track active order rows for performance
-    private Dictionary<CustomerController, GameObject> activeOrderRows = new Dictionary<CustomerController, GameObject>();
+    private Dictionary<Customer, GameObject> activeOrderRows = new Dictionary<Customer, GameObject>();
 
     void Start()
     {
@@ -244,21 +244,23 @@ public class OrderListUI : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Efficiently updates the list of orders, only adding new customers and removing completed ones.
-    /// </summary>
     private void UpdateOrderList()
     {
-        if (CustomerManager.Instance == null) return;
+        if (GameManager.Instance == null) return;
 
-        List<CustomerController> activeCustomers = CustomerManager.Instance.GetActiveCustomers();
-        HashSet<CustomerController> currentCustomers = new HashSet<CustomerController>();
+        List<GameObject> activeCustomers = new List<GameObject>();
+        GameManager.Instance.GetActiveCustomers(activeCustomers);
+        HashSet<Customer> currentCustomers = new HashSet<Customer>();
 
         // First pass: Add new customers and update existing ones
-        foreach (var customer in activeCustomers)
+        foreach (var customerObj in activeCustomers)
         {
+            Customer customer = customerObj.GetComponent<Customer>();
+            if (customer == null) continue;
+
             // Ignore customers who have finished their order
-            if (customer.IsOrderCompleted)
+            if (customer.isServed)
             {
                 continue;
             }
@@ -274,7 +276,7 @@ public class OrderListUI : MonoBehaviour
                     TextMeshProUGUI timeLeftText = orderRow.transform.Find("TimeLeft")?.GetComponent<TextMeshProUGUI>();
                     if (timeLeftText != null)
                     {
-                        timeLeftText.text = customer.GetPatienceTimeLeft().ToString("F1");
+                        timeLeftText.text = customer.GetPatience().ToString("F1");
                     }
                 }
             }
@@ -291,30 +293,29 @@ public class OrderListUI : MonoBehaviour
                 TextMeshProUGUI orderText = orderRow.transform.Find("Order").GetComponent<TextMeshProUGUI>();
                 TextMeshProUGUI timeLeftText = orderRow.transform.Find("TimeLeft").GetComponent<TextMeshProUGUI>();
 
-                if (customerNameText != null) customerNameText.text = customer.customerName;
-                if (orderText != null) orderText.text = customer.GetWantedIngredientsString();
-                if (timeLeftText != null) timeLeftText.text = customer.GetPatienceTimeLeft().ToString("F1");
+                if (customerNameText != null) customerNameText.text = customer.getName();
+                if (orderText != null) orderText.text = customer.GetComponent<Order>()?.getOrderText() ?? "No order available.";
+                if (timeLeftText != null) timeLeftText.text = customer.GetPatience().ToString("F1");
 
                 activeOrderRows.Add(customer, orderRow);
-            }
-        }
-
         // Second pass: Remove customers who are no longer active
-        List<CustomerController> toRemove = new List<CustomerController>();
-        foreach (var customer in activeOrderRows.Keys)
+        List<Customer> toRemove = new List<Customer>();
+        foreach (var customerKey in activeOrderRows.Keys)
         {
-            if (!currentCustomers.Contains(customer))
+            if (!currentCustomers.Contains(customerKey))
             {
-                toRemove.Add(customer);
+                toRemove.Add(customerKey);
             }
         }
 
-        foreach (var customer in toRemove)
+        foreach (var customerToRemove in toRemove)
         {
-            if (activeOrderRows.TryGetValue(customer, out GameObject row))
+            if (activeOrderRows.TryGetValue(customerToRemove, out GameObject row))
             {
                 Destroy(row);
-                activeOrderRows.Remove(customer);
+                activeOrderRows.Remove(customerToRemove);
+            }
+        }
             }
         }
     }

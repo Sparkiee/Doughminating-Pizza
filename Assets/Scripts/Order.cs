@@ -30,11 +30,13 @@ public class Order : MonoBehaviour
     private GameObject orderBubble;
     private GameObject bubbleIcons;
 
-    void Start() {
+    void Start()
+    {
         // Do not randomize order here; wait until order bubble is initialized
     }
 
-    public void InitializeOrderBubble(GameObject bubble) {
+    public void InitializeOrderBubble(GameObject bubble)
+    {
         this.orderBubble = bubble;
         Transform[] children = orderBubble.GetComponentsInChildren<Transform>();
         foreach (Transform child in children)
@@ -49,12 +51,15 @@ public class Order : MonoBehaviour
         if (bubbleIcons == null)
         {
             Debug.LogWarning("IngredientIcons child not found on order bubble!");
-        } else {
+        }
+        else
+        {
             RandomizeOrder();
         }
     }
 
-    private void RandomizeOrder() {
+    private void RandomizeOrder()
+    {
         ingredients.Clear();
 
         // Clear old icons to prevent prefab bloat/corruption
@@ -98,8 +103,8 @@ public class Order : MonoBehaviour
     public bool ComparePizzaToOrder(Pizza pizza)
     {
         if (pizza == null) return false;
-        if(pizza.GetCookLevel() != CookState.Cooked) return false;
-        if(pizza.GetIngredientNames().Count < requiredIngredients.Count) return false;
+        if (pizza.GetCookLevel() != CookState.Cooked) return false;
+        if (pizza.GetIngredientNames().Count < requiredIngredients.Count) return false;
 
         // Get the actual pizza ingredients
         List<string> pizzaIngredients = pizza.GetIngredientNames();
@@ -113,7 +118,8 @@ public class Order : MonoBehaviour
         return true;
     }
 
-    public void CreateTutorialOrder() {
+    public void CreateTutorialOrder()
+    {
         ingredients.Clear();
         if (bubbleIcons != null)
         {
@@ -125,5 +131,16 @@ public class Order : MonoBehaviour
         AddIngredient(IngredientType.Cheese);
         AddIngredient(IngredientType.Sauce);
         AddIngredient(IngredientType.Pineapple);
+    }
+    
+
+    public string getOrderText()
+    {
+        string orderText = ""  ;
+        foreach (IngredientType ingredient in ingredients)
+        {
+            orderText += ingredient.ToString() + ", ";
+        }
+        return orderText.TrimEnd(',', ' ');
     }
 }
