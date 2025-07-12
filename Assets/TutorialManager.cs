@@ -479,7 +479,7 @@ public class TutorialManager : MonoBehaviour
                             case CookState.Cooked:
                                 tutorialMessage.ClearMessageBackwards(() =>
                                 {
-                                    tutorialMessage.ShowMessage("Great! Now you can serve the pizza to the customer!", () =>
+                                    tutorialMessage.ShowMessage("Great! Now you can serve the pizza to " + this.customer.name + "!", () =>
                                     {
                                         tutorialArrow.SetActive(true);
                                         tutorialArrow.transform.position = this.customer.transform.position + new Vector3(0, 2, 0);
