@@ -104,6 +104,7 @@ public class Customer : MonoBehaviour, IInteractable
         this.targetSeat = seat.location;
         this.isMoving = true;
         this.assignedSeat = seat;
+        this.transform.LookAt(targetSeat.position);
     }
 
     public void Interact()
@@ -135,6 +136,18 @@ public class Customer : MonoBehaviour, IInteractable
 
         if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
+            
+            if(isTutorialCustomer)
+            {
+                if(ingredient.TryGetComponent<Pizza>(out Pizza tutorialPizza))
+                {
+                    if(tutorialPizza.GetCookLevel() != CookState.Cooked && !tutorialPizza.HasSauce && !tutorialPizza.HasCheese && !tutorialPizza.HasPineapple)
+                    {
+                        playerHand.InvalidAction("You need to cook the pizza and add sauce and cheese!", 2f);
+                        return;
+                    }
+                } else return; // Only pizzas are allowed for tutorial customers
+            }
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             this.isServed = true;

@@ -10,6 +10,7 @@ public class TutorialMessage : MonoBehaviour
     [SerializeField] private float clearSpeed;
 
     private Coroutine typingCoroutine;
+    private bool isPaused = false;
 
     public void ShowMessage(string message, Action onComplete = null)
     {
@@ -31,7 +32,9 @@ public class TutorialMessage : MonoBehaviour
         foreach (char letter in message.ToCharArray())
         {
             messageText.text += letter;
-            yield return new WaitForSecondsRealtime(typingSpeed);
+            
+            // Wait for pause to end, then wait for typing speed
+            yield return StartCoroutine(WaitForUnpausedTime(typingSpeed));
         }
 
         onComplete?.Invoke();
@@ -52,12 +55,37 @@ public class TutorialMessage : MonoBehaviour
         for (int i = currentText.Length - 1; i >= 0; i--)
         {
             messageText.text = currentText.Substring(0, i);
-            yield return new WaitForSecondsRealtime(clearSpeed);
+            
+            // Wait for pause to end, then wait for clear speed
+            yield return StartCoroutine(WaitForUnpausedTime(clearSpeed));
         }
+        
         if(this.gameObject.activeSelf)
         {
             this.gameObject.SetActive(false);
         }
         onComplete?.Invoke();
+    }
+
+    // Custom wait function that respects pause state
+    private IEnumerator WaitForUnpausedTime(float waitTime)
+    {
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < waitTime)
+        {
+            // Wait until the game is unpaused
+            yield return new WaitUntil(() => Time.timeScale > 0f);
+            
+            // Add time based on scaled time
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    // Public method to pause/unpause tutorial messages
+    public void SetPaused(bool paused)
+    {
+        isPaused = paused;
     }
 }

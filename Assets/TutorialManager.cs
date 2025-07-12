@@ -35,6 +35,14 @@ public class TutorialManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    void Update() {
+        // Make the arrow always face the camera
+        this.tutorialArrow.transform.LookAt(Camera.main.transform.position, Vector3.up);
+        // Rotate 90 degrees around the Y axis to show the side towards the camera
+        this.tutorialArrow.transform.Rotate(0, 90f, 0, Space.Self);
+    }
+
     public void RunTutorial()
     {
         
@@ -45,7 +53,7 @@ public class TutorialManager : MonoBehaviour
         tutorialPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        tutorialMessage.ShowMessage("Welcome to Joe's Pizza!\nYour first day can be quite scary, but we will teach you the basics!", () =>
+        tutorialMessage.ShowMessage("Welcome to Joe's Pizza!\nYour first day can be quite scary, but we are here to help!", () =>
         {
             StartCoroutine(WaitAndContinue());
             IEnumerator WaitAndContinue()

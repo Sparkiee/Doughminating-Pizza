@@ -85,6 +85,13 @@ public class SC_Player : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        
+        // Reset camera rotation to ensure clean start
+        verticalLookRotation = 0f;
+        playerCamera.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        
+        // Ensure player is upright
+        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
     }
 
     void Update()
@@ -291,7 +298,15 @@ public class SC_Player : MonoBehaviour
             _actions.Player.Look.Disable(); // Freeze mouse movement
             toastPanel?.SetActive(false); // Hide toast panel if it exists
             if(isTutorialActive)
+            {
                 tutorialMessage.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
+                // Pause tutorial messages
+                TutorialMessage tutorialMsg = tutorialMessage.GetComponent<TutorialMessage>();
+                if (tutorialMsg != null)
+                {
+                    tutorialMsg.SetPaused(true);
+                }
+            }
         }
         else
         {
@@ -301,7 +316,15 @@ public class SC_Player : MonoBehaviour
             Cursor.visible = false;
             _actions.Player.Look.Enable();
             if(isTutorialActive)
+            {
                 tutorialMessage.GetComponentInChildren<TextMeshProUGUI>().enabled = true;
+                // Resume tutorial messages
+                TutorialMessage tutorialMsg = tutorialMessage.GetComponent<TutorialMessage>();
+                if (tutorialMsg != null)
+                {
+                    tutorialMsg.SetPaused(false);
+                }
+            }
 
         }
     }
