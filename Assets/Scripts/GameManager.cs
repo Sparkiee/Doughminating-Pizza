@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartGame() {
-        if(TutorialPanel.activeSelf) {
+        if(TutorialPanel != null && TutorialPanel.activeSelf) {
             TutorialPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

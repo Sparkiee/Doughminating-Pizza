@@ -38,12 +38,10 @@ public class TutorialManager : MonoBehaviour
     }
 
     void Update() {
-        if (tutorialArrow.activeSelf)
+        if (tutorialArrow != null && tutorialArrow.activeSelf)
         {
-            // Make the arrow always face the camera
-            this.tutorialArrow.transform.LookAt(Camera.main.transform.position, Vector3.up);
-            // Rotate 90 degrees around the Y axis to show the side towards the camera
-            this.tutorialArrow.transform.Rotate(0, 90f, 0, Space.Self);
+            tutorialArrow.transform.LookAt(Camera.main.transform.position, Vector3.up);
+            tutorialArrow.transform.Rotate(0, 90f, 0, Space.Self);
         }
     }
 
@@ -332,19 +330,7 @@ public class TutorialManager : MonoBehaviour
             tutorialArrow.SetActive(false);
             tutorialMessage.ClearMessageBackwards(() =>
             {
-                tutorialMessage.ShowMessage("Great! Now let's add some cheese to the pizza.", () =>
-                {
-                    StartCoroutine(WaitAndContinue6());
-                });
-            });
-        }
-
-        IEnumerator WaitAndContinue6()
-        {
-            yield return new WaitForSeconds(1f);
-            tutorialMessage.ClearMessageBackwards(() =>
-            {
-                tutorialMessage.ShowMessage("You can find the cheese in the box next to the counter.", () =>
+                tutorialMessage.ShowMessage("Great! Now let's add some cheese to the pizza. It's on the counter next to the tomatoes!", () =>
                 {
                     tutorialArrow.SetActive(true);
                     tutorialArrow.transform.position = cheeseBox.transform.position + new Vector3(0, 1, 0);
@@ -540,7 +526,7 @@ public class TutorialManager : MonoBehaviour
                 tutorialMessage.ShowMessage("You can throw it away if it's burnt, or put it back in the oven if it's raw.", () =>
                 {
                     tutorialArrow.SetActive(true);
-                    tutorialArrow.transform.position = trashcan.transform.position + new Vector3(0, 1, 0);
+                    tutorialArrow.transform.position = trashcan.transform.position + new Vector3(0, 2, 0);
                     tutorialArrow.transform.SetParent(trashcan.transform, true);
                     StartCoroutine(WaitForPlayerToGetRidOfPizza());
                 });
@@ -562,6 +548,8 @@ public class TutorialManager : MonoBehaviour
     public void EndTutorial() {
         tutorialMessage.ClearMessageBackwards(() =>
         {
+            tutorialArrow.transform.SetParent(null, true);
+            tutorialArrow.SetActive(false);
             tutorialMessage.ShowMessage("Congratulations! You've completed the tutorial!\nNow you can start your pizza-making journey! Good luck!", () =>
             {
                 StartCoroutine(WaitAndStartGame());
@@ -572,7 +560,6 @@ public class TutorialManager : MonoBehaviour
                 tutorialMessage.ClearMessageBackwards(() =>
                 {
                     tutorialArrow.SetActive(false);
-                    tutorialPanel.SetActive(false);
                 });
 
                 SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();

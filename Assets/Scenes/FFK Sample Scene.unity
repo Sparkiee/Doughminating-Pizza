@@ -11095,8 +11095,6 @@ MonoBehaviour:
   ovenTimerImage: {fileID: 0}
   ovenTimerText: {fileID: 0}
   pizzaPlacementPosition: {x: -0.527, y: 1.633, z: 20.71}
-  cookDuration: 5
-  burnDuration: 10
   isCooking: 0
   smokeEffect: {fileID: 0}
 --- !u!4 &485091758 stripped
@@ -11224,6 +11222,7 @@ MonoBehaviour:
   oven: {fileID: 1299088410}
   blender: {fileID: 1438855670}
   blenderOutput: {fileID: 1344259015}
+  trashcan: {fileID: 1449071152}
 --- !u!4 &485724042
 Transform:
   m_ObjectHideFlags: 0
@@ -13426,6 +13425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1904917362}
   finishMenuUI: {fileID: 1749283710}
+  tutorialPanel: {fileID: 1200303019}
   tutorialMessage: {fileID: 532805894}
   isTutorialActive: 0
   moveSpeed: 5
@@ -33082,8 +33082,6 @@ MonoBehaviour:
   ovenTimerImage: {fileID: 675047440}
   ovenTimerText: {fileID: 1265150949}
   pizzaPlacementPosition: {x: -0.59, y: 1.633, z: 20.3}
-  cookDuration: 5
-  burnDuration: 10
   isCooking: 0
   smokeEffect: {fileID: 1864912046}
 --- !u!65 &1299088416
@@ -37495,6 +37493,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6166584487648029287, guid: cc2c18e189d423749bcb27809650683d,
     type: 3}
   m_PrefabInstance: {fileID: 1461286345}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1449071152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3713323435171401984, guid: e94b4de8e288eac4daa5ff039aab46f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1809768930}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1451125453 stripped
 Transform:
