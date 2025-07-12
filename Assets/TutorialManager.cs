@@ -550,23 +550,33 @@ public class TutorialManager : MonoBehaviour
         {
             tutorialArrow.transform.SetParent(null, true);
             tutorialArrow.SetActive(false);
-            tutorialMessage.ShowMessage("Congratulations! You've completed the tutorial!\nNow you can start your pizza-making journey! Good luck!", () =>
+            tutorialMessage.ShowMessage("You are almost done! There are few minor stuff which we didn't explain, such as patience and health, but you'll figure it out!", () =>
             {
-                StartCoroutine(WaitAndStartGame());
-                IEnumerator WaitAndStartGame()
+                StartCoroutine(WaitAndContinue8());
+                IEnumerator WaitAndContinue8()
                 {
-                    yield return new WaitForSeconds(10f);
+                    yield return new WaitForSeconds(2f);
+                    tutorialMessage.ClearMessageBackwards(() =>
+                    {
+                        tutorialMessage.ShowMessage("Congratulations! You've completed the tutorial!\nNow you can start your pizza-making journey! Good luck!", () => {
+                            StartCoroutine(WaitAndStartGame());
+                            IEnumerator WaitAndStartGame()
+                            {
+                                yield return new WaitForSeconds(10f);
+                            }
+                            tutorialMessage.ClearMessageBackwards(() =>
+                            {
+                                tutorialArrow.SetActive(false);
+                                SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
+                                if (player == null) return;
+                                player.ToggleTutorial(false);
+                                gameManager.StartGame();
+                            });
+
+                        });
+                    });
                 }
-                tutorialMessage.ClearMessageBackwards(() =>
-                {
-                    tutorialArrow.SetActive(false);
-                });
 
-                SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
-                if (player == null) return;
-                player.ToggleTutorial(false);
-
-                gameManager.StartGame();
             });
         });
     }
