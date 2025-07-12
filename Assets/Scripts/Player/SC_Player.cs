@@ -5,12 +5,9 @@ using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 public class SC_Player : MonoBehaviour
-
 {
-
     [Header("Pause Menu")]
     public GameObject pauseMenuUI;
-    // public UnityEngine.UI.Image resumeButtonImage; // Reference to the button image for click effect
     private bool isPaused = false;
     
     [Header("Finish Menu")]
@@ -18,6 +15,7 @@ public class SC_Player : MonoBehaviour
     private bool isGameOver = false;
 
     [Header("Tutorial")]
+    public GameObject tutorialPanel;
     public GameObject tutorialMessage;
     public bool isTutorialActive = false;
 
@@ -282,11 +280,24 @@ public class SC_Player : MonoBehaviour
         TogglePauseMenu(); // Call resume after the effect
     }
 
+    public void SetLookEnabled(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            _actions.Player.Look.Enable();
+        }
+        else
+        {
+            _actions.Player.Look.Disable();
+        }
+    }
+
     void TogglePauseMenu()
     {
         // Don't allow pausing if game is over
         if (isGameOver) return;
-        
+        if (this.tutorialPanel.activeSelf) return;
+
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
         if (isPaused)

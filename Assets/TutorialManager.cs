@@ -23,6 +23,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject oven;
     [SerializeField] private GameObject blender;
     [SerializeField] private GameObject blenderOutput;
+    [SerializeField] private GameObject trashcan;
 
     void Awake()
     {
@@ -37,10 +38,13 @@ public class TutorialManager : MonoBehaviour
     }
 
     void Update() {
-        // Make the arrow always face the camera
-        this.tutorialArrow.transform.LookAt(Camera.main.transform.position, Vector3.up);
-        // Rotate 90 degrees around the Y axis to show the side towards the camera
-        this.tutorialArrow.transform.Rotate(0, 90f, 0, Space.Self);
+        if (tutorialArrow.activeSelf)
+        {
+            // Make the arrow always face the camera
+            this.tutorialArrow.transform.LookAt(Camera.main.transform.position, Vector3.up);
+            // Rotate 90 degrees around the Y axis to show the side towards the camera
+            this.tutorialArrow.transform.Rotate(0, 90f, 0, Space.Self);
+        }
     }
 
     public void RunTutorial()
@@ -49,6 +53,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 1f;
         SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
         if (player == null) return;
+        player.SetLookEnabled(true);
         player.ToggleTutorial(true);
         tutorialPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
@@ -444,31 +449,7 @@ public class TutorialManager : MonoBehaviour
             tutorialArrow.SetActive(false);
             tutorialMessage.ClearMessageBackwards(() =>
             {
-                tutorialMessage.ShowMessage("Great! Now let's bake the pizza in the oven!", () =>
-                {
-                    StartCoroutine(WaitAndContinue8());
-                });
-            });
-        }
-
-        IEnumerator WaitAndContinue8()
-        {
-            yield return new WaitForSeconds(2f);
-            tutorialMessage.ClearMessageBackwards(() =>
-            {
-                tutorialMessage.ShowMessage("You can find the oven next to the counter. Make sure to keep an eye on the timer!", () =>
-                {
-                    StartCoroutine(WaitAndContinue9());
-                });
-            });
-        }
-
-        IEnumerator WaitAndContinue9()
-        {
-            yield return new WaitForSeconds(2f);
-            tutorialMessage.ClearMessageBackwards(() =>
-            {
-                tutorialMessage.ShowMessage("You can place the pizza in the oven by interacting with it.", () =>
+                tutorialMessage.ShowMessage("Great! Now let's bake the pizza in the oven! Make sure to watch the timer!", () =>
                 {
                     tutorialArrow.SetActive(true);
                     tutorialArrow.transform.position = ovenPosition.transform.position + new Vector3(0, 1, 0);
@@ -558,6 +539,9 @@ public class TutorialManager : MonoBehaviour
             {
                 tutorialMessage.ShowMessage("You can throw it away if it's burnt, or put it back in the oven if it's raw.", () =>
                 {
+                    tutorialArrow.SetActive(true);
+                    tutorialArrow.transform.position = trashcan.transform.position + new Vector3(0, 1, 0);
+                    tutorialArrow.transform.SetParent(trashcan.transform, true);
                     StartCoroutine(WaitForPlayerToGetRidOfPizza());
                 });
 
@@ -573,21 +557,6 @@ public class TutorialManager : MonoBehaviour
                 }
             });
         }
-
-        // IEnumerator WaitAndContinue10()
-        // {
-        //     yield return new WaitForSeconds(2f);
-        //     tutorialMessage.ClearMessageBackwards(() =>
-        //     {
-        //         tutorialMessage.ShowMessage("You can serve the pizza by interacting with the customer.", () =>
-        //         {
-        //             tutorialArrow.SetActive(true);
-        //             tutorialArrow.transform.position = this.customer.transform.position + new Vector3(0, 2, 0);
-        //             tutorialArrow.transform.SetParent(this.customer.transform, true);
-        //             // StartCoroutine(WaitForCustomerInteraction());
-        //         });
-        //     });
-        // }
     }
 
     public void EndTutorial() {

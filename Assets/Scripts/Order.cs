@@ -103,18 +103,13 @@ public class Order : MonoBehaviour
 
         // Get the actual pizza ingredients
         List<string> pizzaIngredients = pizza.GetIngredientNames();
-        Debug.Log($"[ORDER] Comparing pizza ingredients: {string.Join(", ", pizzaIngredients)}");
-        Debug.Log($"[ORDER] Comparing order ingredients: {string.Join(", ", ingredients)}");
         for (int i = 0; i < ingredients.Count; i++)
         {
             if (!pizzaIngredients.Contains(ingredients[i].ToString()))
             {
-                Debug.Log($"[ORDER] Pizza is missing ingredient: {ingredients[i]}");
                 return false;
             }
         }
-
-        Debug.Log("[ORDER] Pizza matches the order!");
         return true;
     }
 

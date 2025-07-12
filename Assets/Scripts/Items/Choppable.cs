@@ -14,7 +14,6 @@ public class Choppable : MonoBehaviour, IChopped
         {
             isChopped = true;
             Debug.Log($"{gameObject.name} has been chopped!");
-            // Optional: trigger VFX, change sprite, etc.
         }
     }
 }

@@ -16,7 +16,6 @@ public class PizzaUIController : MonoBehaviour
     {
         InitializeComponents();
         InitializeIngredientUI();
-        Debug.Log("PizzaUIController started");
     }
 
     void Update()

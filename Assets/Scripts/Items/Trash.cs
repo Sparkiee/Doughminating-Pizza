@@ -14,7 +14,6 @@ public class Trash : MonoBehaviour, IInteractable
             if (ingredient != null)
             {
                 // Perform trashing logic here
-                Debug.Log("Trashing " + ingredient.GetIngredientName());
                 playerHand.Remove(); // Remove the item from the player's hand
             }
         }

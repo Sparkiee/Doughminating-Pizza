@@ -83,6 +83,12 @@ public class Customer : MonoBehaviour, IInteractable
                     OnArriveAtSeat();
                 }
             }
+        } else if(!isMoving && !isLeaving && !isServed) {
+            // If not moving, look at the player camera
+            if (playerCamera != null)
+            {
+                transform.LookAt(playerCamera.transform.position);
+            }
         }
 
         this.orderBubble?.transform.LookAt(playerCamera.transform.position);
@@ -114,8 +120,7 @@ public class Customer : MonoBehaviour, IInteractable
         if (playerHand == null) return;
         TryGetComponent<AudioSource>(out AudioSource audioSource);
         if(CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.AlwaysApprove))
-        {
-            Debug.Log("Cheat enabled: AlwaysApprove");
+        {;
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             this.isServed = true;
@@ -136,6 +141,7 @@ public class Customer : MonoBehaviour, IInteractable
 
         if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
         {
+            this.isServed = true;
             
             if(isTutorialCustomer)
             {
@@ -150,7 +156,6 @@ public class Customer : MonoBehaviour, IInteractable
             }
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
-            this.isServed = true;
             // Logic for when the player is holding an ingredient
             if(ingredient.TryGetComponent<Pizza>(out Pizza pizza))
             {

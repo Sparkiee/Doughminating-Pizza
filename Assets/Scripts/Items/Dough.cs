@@ -16,7 +16,6 @@ public class Dough : Ingredient
                 GameObject pizza = Instantiate(pizzaPrefab, this.gameObject.transform.position, Quaternion.identity);
                 pizza.transform.SetParent(this.gameObject.transform.parent);
                 float counterOffset = this.gameObject.GetComponent<IPickable>().GetCounterPositionOffset();
-                Debug.Log("Dough: Placing pizza on counter with offset: " + counterOffset);
                 Vector3 defaultRotation = pizza.GetComponent<IPickable>().GetDefaultRotation();
                 pizza.transform.localRotation = Quaternion.Euler(defaultRotation.x, defaultRotation.y, defaultRotation.z);
                 pizza.transform.localPosition = new Vector3(

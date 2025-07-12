@@ -11,8 +11,8 @@ public class Oven : MonoBehaviour, IInteractable
 
     [Header("Cooking Settings")]
     [SerializeField] private Vector3 pizzaPlacementPosition = new Vector3(-0.7f, 1.633f, 20.5f);
-    [SerializeField] private float cookDuration = 5f;
-    [SerializeField] private float burnDuration = 10f;
+    // [SerializeField] private float cookDuration = 5f;
+    // [SerializeField] private float burnDuration = 10f;
 
 
     private GameObject currentPizza;
@@ -123,7 +123,6 @@ public class Oven : MonoBehaviour, IInteractable
 
     private IEnumerator CookPizza(Pizza pizza)
     {
-        Debug.Log($"Starting to cook pizza: {pizza.name}");
         isCooking = true;
         currentState = pizza.GetCookLevel();
         

@@ -82,8 +82,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
             spawned.transform.localPosition.y + itemOffset + planeOffset,
             spawned.transform.localPosition.z
         );
-
-        Debug.Log($"Spawned {prefab.name} at {spawnPoint.position}");
     }
 
 

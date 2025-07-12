@@ -54,9 +54,14 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            TutorialPanel.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
+            if (player != null)
+            {
+                player.SetLookEnabled(false);
+            }
+            TutorialPanel.SetActive(true);
             // StartGame();
         }
         else
@@ -70,6 +75,11 @@ public class GameManager : MonoBehaviour
             TutorialPanel.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
+            if (player != null)
+            {
+                player.SetLookEnabled(true);
+            }
         }
 
         if(this.gameStarted) return;
@@ -199,7 +209,6 @@ public class GameManager : MonoBehaviour
         if(servedCustomers - failedCustomers >= customersPerLevel * currentLevel) {
             currentLevel++;
             levelText.text = currentLevel.ToString();
-            Debug.Log($"Level {currentLevel} completed! Total served: {servedCustomers}");
         }
         Destroy(customer);
     }

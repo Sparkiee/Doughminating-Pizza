@@ -39,8 +39,7 @@ public class MenuController : MonoBehaviour
                 Destroy(managers[i].gameObject);
             }
         }
-        
-        Debug.Log("MenuController initialized");
+
     }
     
     void Update()

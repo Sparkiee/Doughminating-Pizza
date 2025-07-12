@@ -80,7 +80,6 @@ public class Pizza : Ingredient
             pizzaUI.GetComponent<PizzaUIController>().setCookLevel(CookLevel);
         }
         
-        Debug.Log($"Pizza cooking time: {totalCookingTime:F1}s, Cook state: {CookLevel}");
     }
     
     public float GetRemainingTimeToCooked()
@@ -216,7 +215,7 @@ public class Pizza : Ingredient
         // Store reference to the visual ingredient
         visualIngredients[ingredientType] = visualIngredient;
 
-        Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {config.worldRotation.eulerAngles}");
+        // Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {config.worldRotation.eulerAngles}");
     }
 
     public void Cook()
