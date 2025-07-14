@@ -132,7 +132,6 @@ public class OrderListUI : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Programmatically configures the UI layout, removing the need for manual setup in the editor.
 
     private void ConfigureUILayout()
@@ -248,9 +247,7 @@ public class OrderListUI : MonoBehaviour
 
     }
 
-    /// <summary>
     /// Helper method to create a text label for the header.
-
     private void CreateHeaderLabel(GameObject parent, string gameObjectName, string text, float flexibleWidth)
     {
         GameObject labelObj = new GameObject(gameObjectName, typeof(RectTransform));
