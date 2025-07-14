@@ -296,9 +296,8 @@ public class Customer : MonoBehaviour, IInteractable
             yield return null;
         }
 
-        Debug.Log("Customer patience has run out!");
-
-        // Optional: trigger fail or leave logic
+        // If patience runs out, the customer leaves
+        isServed = true;
         playerHealth?.TakeDamage(1);
         Leave();
     }
@@ -311,7 +310,6 @@ public class Customer : MonoBehaviour, IInteractable
             this.patienceBar.SetActive(false);
             StopCoroutine(patienceCoroutine);
         }
-
         StartCoroutine(RotateTowardsExit());
     }
 
