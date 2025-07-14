@@ -133,7 +133,6 @@ public class OrderListUI : MonoBehaviour
     }
 
     /// Programmatically configures the UI layout, removing the need for manual setup in the editor.
-
     private void ConfigureUILayout()
     {
         // Configure the main panel
