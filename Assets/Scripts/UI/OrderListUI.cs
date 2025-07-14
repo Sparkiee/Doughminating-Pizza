@@ -281,8 +281,8 @@ public class OrderListUI : MonoBehaviour
             Customer customer = customerObj.GetComponent<Customer>();
             if (customer == null) continue;
 
-            // Ignore customers who have finished their order
-            if (customer.isServed)
+            // Only add customers who are seated and not served
+            if (customer.isServed || !customer.IsSeated)
             {
                 continue;
             }
@@ -320,6 +320,9 @@ public class OrderListUI : MonoBehaviour
                 if (timeLeftText != null) timeLeftText.text = customer.GetPatience().ToString("F1");
 
                 activeOrderRows.Add(customer, orderRow);
+            }
+        }
+
         // Second pass: Remove customers who are no longer active
         List<Customer> toRemove = new List<Customer>();
         foreach (var customerKey in activeOrderRows.Keys)
@@ -336,8 +339,6 @@ public class OrderListUI : MonoBehaviour
             {
                 Destroy(row);
                 activeOrderRows.Remove(customerToRemove);
-            }
-        }
             }
         }
     }
