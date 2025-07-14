@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour, IInteractable
 {
+    // Indicates if the customer has reached their seat
+    public bool IsSeated { get; private set; } = false;
     private Transform targetSeat;
     [SerializeField] private float moveSpeed = 2.0f;
     [SerializeField] private bool isMoving = false;
@@ -222,6 +224,7 @@ public class Customer : MonoBehaviour, IInteractable
     {
         // Logic for when the customer arrives at the seat
         isMoving = false;
+        IsSeated = true;
         this.orderBubble?.SetActive(true);
         if (patienceCoroutine != null)
         {

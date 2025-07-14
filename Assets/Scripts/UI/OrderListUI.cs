@@ -97,6 +97,34 @@ public class OrderListUI : MonoBehaviour
 
     public void ToggleOrderList()
     {
+        // Prevent opening when game is paused
+        SC_Player player = FindObjectOfType<SC_Player>();
+        if (player != null && player.pauseMenuUI != null && player.pauseMenuUI.activeSelf)
+        {
+            // If pause menu is active, don't open order list
+            return;
+        }
+
+        // Prevent opening when the tutorial panel is showing ("Would you like to play the tutorial?")
+        // Try to get TutorialManager.Instance, fallback to GameManager.Instance.TutorialPanel
+        GameObject tutorialPanel = null;
+        if (TutorialManager.Instance != null)
+        {
+            tutorialPanel = TutorialManager.Instance.GetType().GetField("tutorialPanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)?.GetValue(TutorialManager.Instance) as GameObject;
+        }
+        if (tutorialPanel == null && GameManager.Instance != null)
+        {
+            var gmType = GameManager.Instance.GetType();
+            var field = gmType.GetField("TutorialPanel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+            if (field != null)
+                tutorialPanel = field.GetValue(GameManager.Instance) as GameObject;
+        }
+        if (tutorialPanel != null && tutorialPanel.activeSelf)
+        {
+            // If tutorial panel is active, don't open order list
+            return;
+        }
+
         isPanelActive = !isPanelActive;
         if (orderListPanel != null)
         {
@@ -104,9 +132,7 @@ public class OrderListUI : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Programmatically configures the UI layout, removing the need for manual setup in the editor.
-    /// </summary>
     private void ConfigureUILayout()
     {
         // Configure the main panel
@@ -200,9 +226,7 @@ public class OrderListUI : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Creates a header row for the order list titles.
-    /// </summary>
     private void CreateHeaderRow()
     {
         if (orderListPanel == null || orderListPanel.transform.Find("HeaderRow") != null) return;
@@ -222,9 +246,7 @@ public class OrderListUI : MonoBehaviour
 
     }
 
-    /// <summary>
     /// Helper method to create a text label for the header.
-    /// </summary>
     private void CreateHeaderLabel(GameObject parent, string gameObjectName, string text, float flexibleWidth)
     {
         GameObject labelObj = new GameObject(gameObjectName, typeof(RectTransform));
@@ -259,8 +281,8 @@ public class OrderListUI : MonoBehaviour
             Customer customer = customerObj.GetComponent<Customer>();
             if (customer == null) continue;
 
-            // Ignore customers who have finished their order
-            if (customer.isServed)
+            // Only add customers who are seated and not served
+            if (customer.isServed || !customer.IsSeated)
             {
                 continue;
             }
@@ -298,6 +320,9 @@ public class OrderListUI : MonoBehaviour
                 if (timeLeftText != null) timeLeftText.text = customer.GetPatience().ToString("F1");
 
                 activeOrderRows.Add(customer, orderRow);
+            }
+        }
+
         // Second pass: Remove customers who are no longer active
         List<Customer> toRemove = new List<Customer>();
         foreach (var customerKey in activeOrderRows.Keys)
@@ -314,8 +339,6 @@ public class OrderListUI : MonoBehaviour
             {
                 Destroy(row);
                 activeOrderRows.Remove(customerToRemove);
-            }
-        }
             }
         }
     }
