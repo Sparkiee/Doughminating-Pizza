@@ -134,7 +134,7 @@ public class OrderListUI : MonoBehaviour
 
     /// <summary>
     /// Programmatically configures the UI layout, removing the need for manual setup in the editor.
-    /// </summary>
+
     private void ConfigureUILayout()
     {
         // Configure the main panel
@@ -228,9 +228,7 @@ public class OrderListUI : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Creates a header row for the order list titles.
-    /// </summary>
     private void CreateHeaderRow()
     {
         if (orderListPanel == null || orderListPanel.transform.Find("HeaderRow") != null) return;
@@ -252,7 +250,7 @@ public class OrderListUI : MonoBehaviour
 
     /// <summary>
     /// Helper method to create a text label for the header.
-    /// </summary>
+
     private void CreateHeaderLabel(GameObject parent, string gameObjectName, string text, float flexibleWidth)
     {
         GameObject labelObj = new GameObject(gameObjectName, typeof(RectTransform));
