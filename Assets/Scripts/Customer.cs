@@ -217,6 +217,19 @@ public class Customer : MonoBehaviour, IInteractable
 
     public string getInteractionText()
     {
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
+        if (playerHand == null) return "Interact with Customer";
+        if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Ingredient>(out Ingredient ingredient))
+        {
+            if (ingredient.TryGetComponent<Pizza>(out Pizza pizza))
+            {
+                return "Serve Pizza to " + this.name;
+            }
+            else
+            {
+                return "Serve " + ingredient.GetIngredientName() + " to " + this.name;
+            }
+        }
         return "Interact with Customer";
     }
 
