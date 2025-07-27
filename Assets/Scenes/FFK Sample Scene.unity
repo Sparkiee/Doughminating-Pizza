@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18300837, g: 0.22869337, b: 0.30677772, a: 1}
+  m_IndirectSpecularColor: {r: 0.18300802, g: 0.22869262, b: 0.30677655, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -21401,6 +21401,54 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0f2df96b7a2b1b4eb0445c0a3be5515, type: 3}
+--- !u!1 &846861051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 846861053}
+  - component: {fileID: 846861052}
+  m_Layer: 0
+  m_Name: BellNotificationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &846861052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846861051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59bb0748a8fe02c4c804e3e4cb93a7f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bellIconSprite: {fileID: 21300000, guid: 2025850073462224497ae3875d9b95cd, type: 3}
+  bellIconTexture: {fileID: 2800000, guid: 2025850073462224497ae3875d9b95cd, type: 3}
+  bellIconResourceName: 
+  showDebugInfo: 0
+--- !u!4 &846861053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846861051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &852559937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59817,7 +59865,7 @@ MonoBehaviour:
   orderRowPrefab: {fileID: 5049362637490787098, guid: 7e46ed5272a2bf04798360c165c1006e,
     type: 3}
   orderListContainer: {fileID: 1399433373}
-  bellNotificationUI: {fileID: 0}
+  bellNotificationUI: {fileID: 846861052}
 --- !u!1 &2052394704
 GameObject:
   m_ObjectHideFlags: 0
@@ -62624,3 +62672,4 @@ SceneRoots:
   - {fileID: 532805899}
   - {fileID: 485724042}
   - {fileID: 1581076132}
+  - {fileID: 846861053}
