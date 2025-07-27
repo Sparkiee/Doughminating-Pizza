@@ -82,6 +82,9 @@ public class BellNotificationUI : MonoBehaviour
         // Try to create the bell icon using available methods
         bool iconCreated = CreateBellIcon(bellIcon);
         
+        // Set the image scale to 0.7
+        bellIcon.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        
         // If no icon was created, use emoji fallback
         if (!iconCreated)
         {
@@ -155,28 +158,45 @@ public class BellNotificationUI : MonoBehaviour
 
     private void UpdateBellNotification()
     {
-        if (CustomerManager.Instance == null || bellNotification == null) return;
+        if (GameManager.Instance == null || bellNotification == null) return;
 
-        List<CustomerController> activeCustomers = CustomerManager.Instance.GetActiveCustomers();
+        List<GameObject> activeCustomers = new List<GameObject>();
+        GameManager.Instance.GetActiveCustomers(activeCustomers);
         int orderCount = 0;
 
         // Count active orders (non-completed customers)
-        foreach (var customer in activeCustomers)
+        foreach (var customerObj in activeCustomers)
         {
-            if (!customer.IsOrderCompleted)
+            Customer customer = customerObj.GetComponent<Customer>();
+            if (customer != null && customer.IsSeated && !customer.isServed)
             {
                 orderCount++;
             }
         }
 
-        // Show/hide bell based on order count
-        bool hasOrders = orderCount > 0;
-        bellNotification.SetActive(hasOrders);
+        // Always show the bell notification
+        bellNotification.SetActive(true);
 
         // Update the count text
-        if (hasOrders && orderCountText != null)
+        if (orderCountText != null)
         {
-            orderCountText.text = orderCount.ToString();
+            if (orderCount > 0)
+            {
+                orderCountText.text = orderCount.ToString();
+                // Display count badge if there are orders:
+                GameObject countBadge = orderCountText.transform.parent.gameObject;
+                countBadge.SetActive(true);
+                orderCountText.gameObject.SetActive(true);
+            }
+            else
+            {
+                orderCountText.text = "";
+                // dont' display count badge if no orders:
+                GameObject countBadge = orderCountText.transform.parent.gameObject;
+                countBadge.SetActive(false);
+                orderCountText.gameObject.SetActive(false);
+            }
+
         }
     }
 
