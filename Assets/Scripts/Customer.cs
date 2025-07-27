@@ -270,6 +270,14 @@ public class Customer : MonoBehaviour, IInteractable
         Leave();
     }
 
+    // Animation event callback function for celebration animation
+    public void OnCelebrationComplete()
+    {
+        // This function is called by animation events when celebration animation finishes
+        Debug.Log($"Customer {name} celebration animation completed");
+        // You can add any logic here that should happen when celebration finishes
+    }
+
     public string getInteractionText()
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
@@ -403,42 +411,5 @@ public class Customer : MonoBehaviour, IInteractable
     {
         return this.name;
     }
-
-    // Door interaction methods
-    void OnTriggerEnter(Collider other)
-    {
-        // When customer enters a door trigger, ensure the door opens
-        if (other.CompareTag("Door") || other.GetComponent<SojaExiles.opencloseDoor>() != null)
-        {
-            Debug.Log($"Customer {name} triggered door opening.");
-            // The opencloseDoor script will handle the door opening automatically
-            // since this customer has the "Customer" tag
-            
-            // Add a small delay to ensure the door has time to open
-            if (isMoving)
-            {
-                StartCoroutine(WaitForDoorToOpen());
-            }
-        }
-    }
-
-    private IEnumerator WaitForDoorToOpen()
-    {
-        isWaitingForDoor = true;
-        yield return new WaitForSeconds(0.5f); // Wait for door animation
-        isWaitingForDoor = false;
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        // When customer exits a door trigger, the door will close automatically
-        if (other.CompareTag("Door") || other.GetComponent<SojaExiles.opencloseDoor>() != null)
-        {
-            Debug.Log($"Customer {name} exited door trigger.");
-            // The opencloseDoor script will handle the door closing automatically
-        }
-    }
-
-
 }
 

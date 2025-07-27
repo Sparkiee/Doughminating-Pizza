@@ -250,9 +250,8 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.6666667
-    functionName: OnCelebrateComplete
+  m_Events: []
+    functionName: 
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
