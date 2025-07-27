@@ -1534,6 +1534,7 @@ GameObject:
   - component: {fileID: 4660309838833792243}
   - component: {fileID: 6201515705366901418}
   - component: {fileID: -3038701914433650721}
+  - component: {fileID: 7330194968292587139}
   m_Layer: 0
   m_Name: CricketBatsman
   m_TagString: Untagged
@@ -1677,6 +1678,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7330194968292587139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653247046118013287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c2f342d335b074ca178037c995fbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}
 --- !u!1 &4674687542507426669
 GameObject:
   m_ObjectHideFlags: 0

@@ -337,8 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c2f342d335b074ca178037c995fbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 1615279015708764166, guid: d9dc4955399bf2f49bb7b31c3ca7efe4,
-    type: 3}
+  highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}
 --- !u!111 &8921635287900539166
 Animation:
   m_ObjectHideFlags: 0

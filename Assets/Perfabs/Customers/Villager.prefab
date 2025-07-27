@@ -1647,6 +1647,7 @@ GameObject:
   - component: {fileID: 2750536015425250604}
   - component: {fileID: 1544698539749548726}
   - component: {fileID: -7309979363065028894}
+  - component: {fileID: -6352550992777636196}
   m_Layer: 0
   m_Name: Villager
   m_TagString: Untagged
@@ -1790,6 +1791,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6352550992777636196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2744035215387846840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c2f342d335b074ca178037c995fbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}
 --- !u!1 &2920019525642700832
 GameObject:
   m_ObjectHideFlags: 0
