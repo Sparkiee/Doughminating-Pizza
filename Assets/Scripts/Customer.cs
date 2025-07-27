@@ -127,7 +127,12 @@ public class Customer : MonoBehaviour, IInteractable
         TryGetComponent<AudioSource>(out AudioSource audioSource);
         if (CheatManager.Instance.IsCheatActive(CheatManager.Cheat.cheatName.AlwaysApprove))
         {
-            ;
+            // If the AlwaysApprove cheat is active, automatically serve the customer
+            if(playerHand.IsHoldingItem && playerHand.HeldItem.TryGetComponent<Tool>(out Tool tool))
+            {
+                playerHand.InvalidAction("This doesn't seem edible!", 2f); 
+                return;
+            }
             this.patienceBar?.SetActive(false);
             this.orderBubble?.SetActive(false);
             this.isServed = true;
