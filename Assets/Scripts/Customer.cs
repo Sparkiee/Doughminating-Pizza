@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using SojaExiles;
 
 public class Customer : MonoBehaviour, IInteractable
 {
@@ -12,6 +13,7 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private bool isMoving = false;
     private bool isLeaving = false;
     private bool hasFailed = true;
+    private bool isWaitingForDoor = false;
 
     private GameObject orderBubble;
     private GameObject patienceBar;
@@ -38,6 +40,30 @@ public class Customer : MonoBehaviour, IInteractable
 
     void Start()
     {
+        // Ensure the customer has the proper tag for door interactions
+        if (!gameObject.CompareTag("Customer"))
+        {
+            gameObject.tag = "Customer";
+            Debug.Log("Customer tag set for door interactions.");
+        }
+
+        // Ensure the customer has a collider for door trigger detection
+        if (GetComponent<Collider>() == null)
+        {
+            var collider = gameObject.AddComponent<CapsuleCollider>();
+            collider.isTrigger = false; // Keep as solid collider for physics
+            collider.height = 2f;
+            collider.radius = 0.5f;
+            Debug.Log("Collider added to customer for door interactions.");
+        }
+        
+        // Add a separate trigger collider for door detection
+        var triggerCollider = gameObject.AddComponent<CapsuleCollider>();
+        triggerCollider.isTrigger = true;
+        triggerCollider.height = 2.2f;
+        triggerCollider.radius = 0.6f;
+        Debug.Log("Trigger collider added to customer for door detection.");
+
         this.animator = transform.Find("BaseCharacter")?.GetComponent<Animator>();
         if (this.animator == null)
         {
@@ -59,6 +85,10 @@ public class Customer : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
+        // Don't move if waiting for door to open
+        if (isWaitingForDoor)
+            return;
+            
         if (isMoving && isLeaving)
         {
             // Move towards the exit point
@@ -106,6 +136,19 @@ public class Customer : MonoBehaviour, IInteractable
     {
         this.isTutorialCustomer = true;
     }
+
+    // Method to handle entrance - ensures door opens when customer enters
+    public void EnterRestaurant(Transform entranceDoor = null)
+    {
+        // Ensure customer tag is set for door interactions
+        if (!gameObject.CompareTag("Customer"))
+        {
+            gameObject.tag = "Customer";
+        }
+
+        Debug.Log($"Customer {name} entering restaurant with automatic door integration.");
+    }
+    
     void Awake()
     {
 
@@ -117,6 +160,13 @@ public class Customer : MonoBehaviour, IInteractable
         this.isMoving = true;
         this.assignedSeat = seat;
         this.transform.LookAt(targetSeat.position);
+        
+        // Ensure customer has proper tag for door interactions
+        if (!gameObject.CompareTag("Customer"))
+        {
+            gameObject.tag = "Customer";
+            Debug.Log($"Customer {name} tag set for door interactions while walking to counter.");
+        }
     }
 
     public void Interact()
@@ -352,6 +402,41 @@ public class Customer : MonoBehaviour, IInteractable
     public string getName()
     {
         return this.name;
+    }
+
+    // Door interaction methods
+    void OnTriggerEnter(Collider other)
+    {
+        // When customer enters a door trigger, ensure the door opens
+        if (other.CompareTag("Door") || other.GetComponent<SojaExiles.opencloseDoor>() != null)
+        {
+            Debug.Log($"Customer {name} triggered door opening.");
+            // The opencloseDoor script will handle the door opening automatically
+            // since this customer has the "Customer" tag
+            
+            // Add a small delay to ensure the door has time to open
+            if (isMoving)
+            {
+                StartCoroutine(WaitForDoorToOpen());
+            }
+        }
+    }
+
+    private IEnumerator WaitForDoorToOpen()
+    {
+        isWaitingForDoor = true;
+        yield return new WaitForSeconds(0.5f); // Wait for door animation
+        isWaitingForDoor = false;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        // When customer exits a door trigger, the door will close automatically
+        if (other.CompareTag("Door") || other.GetComponent<SojaExiles.opencloseDoor>() != null)
+        {
+            Debug.Log($"Customer {name} exited door trigger.");
+            // The opencloseDoor script will handle the door closing automatically
+        }
     }
 
 
