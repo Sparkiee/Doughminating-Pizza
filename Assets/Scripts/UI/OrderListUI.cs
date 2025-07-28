@@ -89,9 +89,33 @@ public class OrderListUI : MonoBehaviour
             }
         }
 
+        // Ensure bell notification is always available (in case it was destroyed during scene transitions)
+        EnsureBellNotificationExists();
+
         if (isPanelActive)
         {
             UpdateOrderList();
+        }
+    }
+
+    private void EnsureBellNotificationExists()
+    {
+        if (bellNotificationUI == null || bellNotificationUI.gameObject == null)
+        {
+            bellNotificationUI = FindObjectOfType<BellNotificationUI>();
+            if (bellNotificationUI == null)
+            {
+                // Create a new GameObject with the BellNotificationUI component
+                GameObject bellNotificationObj = new GameObject("BellNotificationUI");
+                bellNotificationUI = bellNotificationObj.AddComponent<BellNotificationUI>();
+                Debug.Log("OrderListUI: Recreated BellNotificationUI component after scene reload");
+            }
+        }
+        
+        // Ensure the bell notification is initialized
+        if (bellNotificationUI != null)
+        {
+            bellNotificationUI.InitializeBellNotification();
         }
     }
 

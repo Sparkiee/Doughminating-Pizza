@@ -16,7 +16,7 @@ public class BellNotificationUI : MonoBehaviour
     [Tooltip("Or specify filename in Resources folder (e.g., 'bell_icon' for bell_icon.png)")]
     public string bellIconResourceName = "";
     [Tooltip("Debug: Shows which method was used to load the icon")]
-    public bool showDebugInfo = false;
+    public bool showDebugInfo = true;
 
     private readonly struct UITheme
     {
@@ -31,19 +31,67 @@ public class BellNotificationUI : MonoBehaviour
 
     void Start()
     {
+        if (showDebugInfo) Debug.Log("BellNotificationUI: Start called");
         // Add a small delay to ensure Canvas is ready
         Invoke(nameof(CreateBellNotification), 0.1f);
+        // Also ensure we update the bell state after creation
+        Invoke(nameof(UpdateBellNotification), 0.2f);
     }
 
     void Update()
     {
+        // Check if bell notification was destroyed (e.g., after scene reload)
+        if (bellNotification == null)
+        {
+            CreateBellNotification();
+        }
         UpdateBellNotification();
     }
 
     private void CreateBellNotification()
     {
-        // Find the Canvas to attach the bell notification to
-        Canvas canvas = FindObjectOfType<Canvas>();
+        // If bell notification already exists, don't create another one
+        if (bellNotification != null)
+        {
+            return;
+        }
+
+        // Find the appropriate Canvas to attach the bell notification to
+        // Try to find HUD canvas first, then fall back to any other UI canvas
+        Canvas canvas = null;
+        
+        // Look for HUD canvas specifically
+        GameObject hudCanvasObj = GameObject.Find("HUD");
+        if (hudCanvasObj != null)
+        {
+            canvas = hudCanvasObj.GetComponent<Canvas>();
+        }
+        
+        // If HUD canvas not found, look for any canvas that's suitable for UI
+        if (canvas == null)
+        {
+            Canvas[] allCanvases = FindObjectsOfType<Canvas>();
+            foreach (Canvas c in allCanvases)
+            {
+                // Prefer canvases that have Screen Space - Overlay or Screen Space - Camera render mode
+                if (c.renderMode == RenderMode.ScreenSpaceOverlay || c.renderMode == RenderMode.ScreenSpaceCamera)
+                {
+                    // Avoid the PizzaCanva as it might be for pizza-specific UI
+                    if (c.name != "PizzaCanva")
+                    {
+                        canvas = c;
+                        break;
+                    }
+                }
+            }
+            
+            // If still no suitable canvas found, use any canvas
+            if (canvas == null && allCanvases.Length > 0)
+            {
+                canvas = allCanvases[0];
+            }
+        }
+        
         if (canvas == null) 
         {
             Debug.LogWarning("BellNotificationUI: No Canvas found in scene!");
@@ -55,6 +103,7 @@ public class BellNotificationUI : MonoBehaviour
         // Create the main bell container
         bellNotification = new GameObject("BellNotification", typeof(RectTransform));
         bellNotification.transform.SetParent(canvas.transform, false);
+
 
         // Position it on the right side of the screen
         RectTransform bellRect = bellNotification.GetComponent<RectTransform>();
@@ -127,8 +176,8 @@ public class BellNotificationUI : MonoBehaviour
         orderCountText.alignment = TextAlignmentOptions.Center;
         orderCountText.color = Color.white;
 
-        // Initially hide the bell if no orders
-        bellNotification.SetActive(false);
+        // Initially show the bell - UpdateBellNotification will handle visibility logic
+        bellNotification.SetActive(true);
     }
 
     private Sprite CreateCircleSprite()
@@ -158,7 +207,17 @@ public class BellNotificationUI : MonoBehaviour
 
     private void UpdateBellNotification()
     {
-        if (GameManager.Instance == null || bellNotification == null) return;
+        if (GameManager.Instance == null) 
+        {
+            return;
+        }
+        
+        // If bell notification is null, try to create it
+        if (bellNotification == null)
+        {
+            CreateBellNotification();
+            return; // Return early to avoid null reference issues
+        }
 
         List<GameObject> activeCustomers = new List<GameObject>();
         GameManager.Instance.GetActiveCustomers(activeCustomers);
@@ -175,7 +234,19 @@ public class BellNotificationUI : MonoBehaviour
         }
 
         // Always show the bell notification
-        bellNotification.SetActive(true);
+        if (bellNotification != null)
+        {
+            bellNotification.SetActive(true);
+            
+            if (showDebugInfo && orderCount > 0)
+            {
+                Debug.Log($"BellNotificationUI: Updating bell with {orderCount} orders");
+            }
+        }
+        else
+        {
+            if (showDebugInfo) Debug.Log("BellNotificationUI: Bell notification GameObject is null during update");
+        }
 
         // Update the count text
         if (orderCountText != null)
@@ -197,6 +268,10 @@ public class BellNotificationUI : MonoBehaviour
                 orderCountText.gameObject.SetActive(false);
             }
 
+        }
+        else if (showDebugInfo)
+        {
+            Debug.Log("BellNotificationUI: orderCountText is null during update");
         }
     }
 
@@ -267,6 +342,17 @@ public class BellNotificationUI : MonoBehaviour
         if (bellNotification == null)
         {
             CreateBellNotification();
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Clean up the bell notification GameObject if it exists
+        if (bellNotification != null)
+        {
+            DestroyImmediate(bellNotification);
+            bellNotification = null;
+            orderCountText = null;
         }
     }
 }
