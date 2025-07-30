@@ -317,8 +317,8 @@ public class OrderListUI : MonoBehaviour
             Customer customer = customerObj.GetComponent<Customer>();
             if (customer == null) continue;
 
-            // Only add customers who are seated and not served
-            if (customer.isServed || !customer.IsSeated)
+            // Add customer only if they are not served (used to be only seated, but now list is updated when they enter the restaurant)
+            if (customer.isServed)
             {
                 continue;
             }
