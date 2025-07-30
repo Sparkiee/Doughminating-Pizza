@@ -74,6 +74,18 @@ public class OrderListUI : MonoBehaviour
 
     void Update()
     {
+        // Close order list if game is over
+        SC_Player player = FindObjectOfType<SC_Player>();
+        if (player != null && player.finishMenuUI != null && player.finishMenuUI.activeSelf)
+        {
+            if (isPanelActive && orderListPanel != null)
+            {
+                isPanelActive = false;
+                orderListPanel.SetActive(false);
+            }
+            return; // Don't allow opening while game over
+        }
+
         if (Keyboard.current != null && Keyboard.current.oKey.wasPressedThisFrame)
         {
             ToggleOrderList();
