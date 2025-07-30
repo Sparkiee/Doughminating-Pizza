@@ -13,7 +13,6 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private bool isMoving = false;
     private bool isLeaving = false;
     private bool hasFailed = true;
-    private bool isWaitingForDoor = false;
 
     private GameObject orderBubble;
     private GameObject patienceBar;
@@ -85,9 +84,8 @@ public class Customer : MonoBehaviour, IInteractable
     // Update is called once per frame
     void Update()
     {
-        // Don't move if waiting for door to open
-        if (isWaitingForDoor)
-            return;
+        // Doors now open automatically, so no need to wait
+        // The door system handles opening/closing based on customer proximity
             
         if (isMoving && isLeaving)
         {
