@@ -37,7 +37,7 @@ This document provides essential information about the game, including how to pl
 5. **Bake It:** Place pizzas into the oven and wait for the timer. Don’t burn them!  
 6. **Trash Junk:** Messed up the ingredients? Or accidently burnt the pizza? Trash it!
 7. **Serve:** Hand each customer his desired pizza.  
-8. **Earn Points:** The faster and more accurately you serve, the higher your score.
+8. **Don't mess up order:** Don't mess up or run out of time! Customers grow impatient when you mess up!
 
 ---
 
