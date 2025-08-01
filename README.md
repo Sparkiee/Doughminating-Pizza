@@ -4,19 +4,18 @@ This document provides essential information about the game, including how to pl
 ---
 
 ### 📖 Table of Contents
----
 1. [Game Overview](#-game-overview)
 2. [How to Play](#-how-to-play)
 3. [Controls](#-controls)
-4. [Game Mechanics](#-game-mechanics)
+4. [Game Mechanics](#game-mechanics)
 5. [Ingredients & Stations](#-ingredients--stations)
 6. [Tips & Tricks](#-tips--tricks)
 7. [Credits](#-credits)
 
+
 ---
 
 ## 🎮 Game Overview
----
 - **Genre:** Pizza Simulation / Time Management  
 - **Platform:** Windows  
 - **Team:** Maxim Shteingard, Hannah Silverberg, Yossi Matatov
@@ -29,7 +28,6 @@ This document provides essential information about the game, including how to pl
 ---
 
 ## 🍕 How to Play
----
 1. **Start the Game:** Begin in the kitchen with basic ingredients and a few orders.  
 2. **Take Orders:** Look at the customers to know their orders or open the order panel using 'O' button
 3. **Sauce It:** Throw the tomato into the blender for some wild blending and excellent sauce.
@@ -42,7 +40,6 @@ This document provides essential information about the game, including how to pl
 ---
 
 ## 🎮 Controls
----
 - **Movement:** `W/A/S/D` + Mouse to look around  
 - **Interact:** `E` or `Left Mouse Button (LMB)`  
 - **Pause / Menu:** `ESC Key`
@@ -52,7 +49,6 @@ This document provides essential information about the game, including how to pl
 ---
 
 ## ⚙️ Game Mechanics
----
 - **Interactable Objects:** Every station (e.g., ingredient spawns, blender, oven) uses interfaces for interaction.  
 - **Ingredient Handling:** Pick up, place, and combine items using a hand system.  
 - **Timer-Based Cooking:** Pizza must be baked within a set time.  
@@ -66,7 +62,6 @@ This document provides essential information about the game, including how to pl
 ---
 
 ## 🍅 Ingredients & Stations
----
 - **Stations Include:**  
   - **Blender:** Make sauce  
   - **Ingredient Stock:** Grab ingredient  
@@ -82,7 +77,6 @@ This document provides essential information about the game, including how to pl
 ---
 
 ## 🎮Cheat Manager
----
 There are few available cheats in our game in case you struggle, press `ESC Key` to hit the pause menu and see the toggles:
 1. **Just Right!** - You can hand a customer any ingredient, they will always be 😄
 2. **Can't Burn** - Your hands are busy? Don't have time to grab the pizza from the oven? With this cheat it will wait for you as long as needed 🔥
@@ -92,7 +86,7 @@ There are few available cheats in our game in case you struggle, press `ESC Key`
 ---
 
 ## 💡 Tips & Tricks
----
+
 - Keep an eye on timers to avoid burnt pizzas  
 - Prep multiple ingredients in advance for faster combos  
 - Prioritize orders based on difficulty and time left  
@@ -100,8 +94,16 @@ There are few available cheats in our game in case you struggle, press `ESC Key`
 
 ---
 
-## 👨‍🍳 Credits
+
+## 🐞 Known Issues
+- **#1** You can stack objects on top of each other, make sure to use it for your own advantage during the rush hour!
+- **#2** You can interact with objects and customers while the order menu is open (Make you like to see the orders right in your face)
+- **3** The game might freeze for a second when you open the order menu, this is due to the game loading all the orders at once, we are working on it!
+
 ---
+
+## 👨‍🍳 Credits
+
 - **Art & Assets:** Unity Asset Store / Blender / Meshy.AI / ChatGPT 
 - **Special Thanks:** Everyone who gave feedback & **YOU**, the player!
 
