@@ -19,7 +19,7 @@ This document provides essential information about the game, including how to pl
 ---
 - **Genre:** Pizza Simulation / Time Management  
 - **Platform:** Windows  
-- **Team:** Maxim Shteingard, Hana Silverberg, Yossi Matatov
+- **Team:** Maxim Shteingard, Hannah Silverberg, Yossi Matatov
 - **Engine:** Unity  
 
 	Step into the chaotic, cheesy world of *Doughminating Pizza*, where you craft mouthwatering pizzas from scratch in a fully interactive 3D kitchen. Assemble, blend, bake, and serve—every step is in your hands!
