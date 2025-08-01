@@ -7,7 +7,7 @@ This document provides essential information about the game, including how to pl
 1. [Game Overview](#-game-overview)
 2. [How to Play](#-how-to-play)
 3. [Controls](#-controls)
-4. [Game Mechanics](#game-mechanics)
+4. [Game Mechanics](#-game-mechanics)
 5. [Ingredients & Stations](#-ingredients--stations)
 6. [Tips & Tricks](#-tips--tricks)
 7. [Credits](#-credits)
