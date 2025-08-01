@@ -111,10 +111,10 @@ There are few available cheats in our game in case you struggle, press `ESC Key`
 * [Steve by BenAissa_Karim](https://sketchfab.com/3d-models/pizza-steve-e468c1abff564a2981ef0974b0160f84) 
 * [Restaurant Scene by Brick Project Studio](https://assetstore.unity.com/packages/3d/environments/fast-food-restaurant-kit-239419)
 * [Trash Bin by LerGer](https://sketchfab.com/3d-models/trash-bin-96c6c18cff6b4e1abcdf9f85cb8c690d)
-* [Blender & more by ???](https://rayb2.itch.io/kitchen-stuff)
+* [Blender & more by rayB](https://rayb2.itch.io/kitchen-stuff)
 * [Cheese by Grasbock](https://sketchfab.com/3d-models/cheese-6aca23ca300b474888ad72b00be9595d)
 * [Pizza Oven by fakefurfetishferre](https://sketchfab.com/3d-models/pizza-oven-c1b6ebc28668499a9f42388e41825180)
-* [Pizza Oven 2 by ???](https://3dwarehouse.sketchup.com/model/24c37c6b-a5e4-4e1d-b3f2-4d1f25d90173/Unity-Z-Pizza-Oven-Unit-Modular-Outdoor-Kitchen-With-Wood-Fired-Oven?hl=enhttps://3dwarehouse.sketchup.com/model/24c37c6b-a5e4-4e1d-b3f2-4d1f25d90173/Unity-Z-Pizza-Oven-Unit-Modular-Outdoor-Kitchen-With-Wood-Fired-Oven?hl=en)
+* [Pizza Oven 2 by Cornerstone Rocks](https://3dwarehouse.sketchup.com/model/24c37c6b-a5e4-4e1d-b3f2-4d1f25d90173/Unity-Z-Pizza-Oven-Unit-Modular-Outdoor-Kitchen-With-Wood-Fired-Oven?hl=enhttps://3dwarehouse.sketchup.com/model/24c37c6b-a5e4-4e1d-b3f2-4d1f25d90173/Unity-Z-Pizza-Oven-Unit-Modular-Outdoor-Kitchen-With-Wood-Fired-Oven)
 * [Direction Arrow by Alihan](https://sketchfab.com/3d-models/direction-arrow-6ef46718c7b242e39fcad7f27ee858a5)
 
 Special thanks to Meshy.AI for creating a lot of simple ingredients!
