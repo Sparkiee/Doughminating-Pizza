@@ -1,5 +1,6 @@
 # 🍕 Welcome to Doughminating Pizza!
 This document provides essential information about the game, including how to play, game mechanics, controls, and additional notes.
+![Uploading image.png…]()
 
 ---
 
